@@ -43,9 +43,9 @@ async def setup():
 
 
 ###
-#
+#   Events
 ###
-itswednesday = False
+
 
 @client.event
 async def on_ready():
