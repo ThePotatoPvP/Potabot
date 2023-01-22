@@ -57,14 +57,16 @@ class SFWInteractions(commands.Cog):
     @commands.hybrid_command(aliases=['say'],brief='Make the bot say something')
     async def send(self, ctx, *, text='issou'):
         await ctx.send(text)
-        await ctx.message.delete()
+        try:
+            await ctx.message.delete()
+        except: pass
 
     @commands.hybrid_command(brief='Make the bot say something, privately')
     async def mp(self, ctx, target : discord.Member, *, text='pd'):
         try:
             await target.send(text)
-        except: pass 
-        ctx.message.delete()
-
+            await ctx.message.delete()
+        except: pass
+        
 async def setup(bot: commands.Bot):
     await bot.add_cog(SFWInteractions(bot))
