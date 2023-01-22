@@ -22,12 +22,12 @@ class Help(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(aliases=['h'], brief='Shows this page', display_name="help")
-    async def _help(self, ctx, *, input='base'):
+    @commands.command(aliases=['h'], brief='Shows this page')
+    async def _help(self, ctx, *, entree='base'):
         await ctx.send(embed=_help_embed_maker(self.client))
 
     @app_commands.command(name='help', description='Shows all my commands')
-    async def __help(self, interaction: discord.Interaction):
+    async def help(self, interaction: discord.Interaction):
         await interaction.response.send_message(embed=_help_embed_maker(self.client))
 
 async def setup(bot: commands.Bot):

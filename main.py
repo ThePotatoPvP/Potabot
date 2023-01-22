@@ -36,9 +36,7 @@ client  = commands.Bot(command_prefix = "p!", help_command=None, intents = inten
 
 async def setup():
     await client.add_cog(MusicFunctions(client))
-    #client.add_cog(SongDownloader(client))
     await client.add_cog(SFWInteractions(client))
-    #client.add_cog(Help(client))
     await client.add_cog(AdminCommands(client))
 
 
@@ -63,11 +61,12 @@ async def on_message(message):
     else:
         for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
             await func(client, message)
-        if message.content.startswith("P!"):
-            message.content = "p!_" + message.content[2:]
-        elif message.content.starswith("p!"):
-            message.content = "p!_" + message.content[2:]
-        await client.process_commands(message)
+        if message.content.startswith("p!"):
+            cmd = message.content.split()[0][2:]
+            for cog in client.cogs:
+                for command in client.get_cog(cog).get_commands():
+                    if command.name == '_' + cmd or cmd in command.aliases:
+                        command.__call__(message.content.replace("p!"+cmd, ""))
 
 @client.event
 async def on_command_error(ctx, error):
@@ -86,9 +85,7 @@ async def reload(ctx):
         client.remove_cog(cog)
 
     client.add_cog(MusicFunctions(client))
-    #client.add_cog(SongDownloader(client))
     client.add_cog(SFWInteractions(client))
-    #client.add_cog(Help(client))
     client.add_cog(AdminCommands(client))
 
 
