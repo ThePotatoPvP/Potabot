@@ -6,14 +6,14 @@ class AdminCommands(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.hybrid_command(hidden=True)
+    @commands.command(hidden=True)
     @commands.has_permissions(kick_members=True) 
     async def kick(self, ctx, member : discord.Member,*, reason = "surplus de wati-bizarrerie"):
         """Permet de kick qlqun"""
         await member.send("Yo la frappe \n Tu t'es fait **kick** du wati-serv pour : "+reason +"\n \n CHEH :woman_in_manual_wheelchair:")
         await member.kick(reason = reason)
 
-    @commands.hybrid_command(aliases=['clear'], hidden=True)
+    @commands.command(aliases=['clear'], hidden=True)
     @commands.has_permissions(manage_messages = True)
     async def clean(self, ctx, number:int):
         if number<=16:
@@ -21,7 +21,7 @@ class AdminCommands(commands.Cog):
         else:
             await ctx.reply(f'Cannot delete more than 15 messages at once', delete_after=10)
 
-    @commands.hybrid_command(hidden=True)
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def statut(self,ctx,*,statut=''):
         if statut == "":
@@ -30,7 +30,7 @@ class AdminCommands(commands.Cog):
             await self.client.change_presence(status=discord.Status.online, activity=discord.Game(kk))
         await ctx.message.delete()
 
-    @commands.hybrid_command(hidden=True)
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def serverslist(self, ctx):
         letxt = str("```")
@@ -42,7 +42,7 @@ class AdminCommands(commands.Cog):
         await ctx.author.send(letxt)
         await ctx.message.delete()
 
-    @commands.hybrid_command(hidden=True)
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def channelslist(self, ctx, serverid):
         """Donne la liste des channels d'un server et leur id"""
@@ -58,7 +58,7 @@ class AdminCommands(commands.Cog):
         f.close()
         await ctx.message.delete()
 
-    @commands.hybrid_command(hidden=True)
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def getinvite(self, ctx, channelid):
         channel = self.client.get_channel(int(channelid))
@@ -66,7 +66,7 @@ class AdminCommands(commands.Cog):
         await ctx.author.send(inv)
         await ctx.message.delte()
 
-    @commands.hybrid_command(hidden=True)
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def attachmentslist(self, ctx, channelid):
         """Donne la liste des attachements dans le channel"""
