@@ -96,12 +96,7 @@ class Potabot(commands.Bot):
             print("en eussou el messago")
             for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
                 await func(client, message)
-            if message.content.startswith("p!"):
-                cmd = message.content.split()[0][2:]
-                for cog in client.cogs:
-                    for command in client.get_cog(cog).get_commands():
-                        if command.name == '_' + cmd or cmd in command.aliases:
-                            await command.__call__(await client.get_context(message))
+            await client.process_commands(message)
 
     async def setup_hook(self):
         for cog in self.cogs_to_quire:
