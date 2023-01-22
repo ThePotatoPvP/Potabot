@@ -6,33 +6,33 @@ class AdminCommands(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(hidden=True)
+    @commands.hybrid_command(hidden=True)
     @commands.has_permissions(kick_members=True) 
-    async def _kick(self, ctx, member : discord.Member,*, reason = "surplus de wati-bizarrerie"):
+    async def kick(self, ctx, member : discord.Member,*, reason = "surplus de wati-bizarrerie"):
         """Permet de kick qlqun"""
         await member.send("Yo la frappe \n Tu t'es fait **kick** du wati-serv pour : "+reason +"\n \n CHEH :woman_in_manual_wheelchair:")
         await member.kick(reason = reason)
 
-    @commands.command(aliases=['clear'], hidden=True)
+    @commands.hybrid_command(aliases=['clear'], hidden=True)
     @commands.has_permissions(manage_messages = True)
-    async def _clean(self, ctx, number:int):
+    async def clean(self, ctx, number:int):
         if number<=16:
             await ctx.channel.purge(limit=int(number))
         else:
             await ctx.reply(f'Cannot delete more than 15 messages at once', delete_after=10)
 
-    @commands.command(hidden=True)
+    @commands.hybrid_command(hidden=True)
     @commands.is_owner()
-    async def _statut(self,ctx,*,kk):
-        if kk == "":
+    async def statut(self,ctx,*,statut=''):
+        if statut == "":
             await self.client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
         else:
             await self.client.change_presence(status=discord.Status.online, activity=discord.Game(kk))
         await ctx.message.delete()
 
-    @commands.command(hidden=True)
+    @commands.hybrid_command(hidden=True)
     @commands.is_owner()
-    async def _serverslist(self, ctx):
+    async def serverslist(self, ctx):
         letxt = str("```")
         guilds = await self.client.fetch_guilds(limit=150).flatten()
         for server in guilds:
@@ -42,9 +42,9 @@ class AdminCommands(commands.Cog):
         await ctx.author.send(letxt)
         await ctx.message.delete()
 
-    @commands.command(hidden=True)
+    @commands.hybrid_command(hidden=True)
     @commands.is_owner()
-    async def _channelslist(self, ctx, serverid):
+    async def channelslist(self, ctx, serverid):
         """Donne la liste des channels d'un server et leur id"""
         f = open("temp.txt", "w")
         server = self.client.get_guild(int(serverid))
@@ -58,17 +58,17 @@ class AdminCommands(commands.Cog):
         f.close()
         await ctx.message.delete()
 
-    @commands.command(hidden=True)
+    @commands.hybrid_command(hidden=True)
     @commands.is_owner()
-    async def _getinvite(self, ctx, channelid):
+    async def getinvite(self, ctx, channelid):
         channel = self.client.get_channel(int(channelid))
         inv = await channel.create_invite()
         await ctx.author.send(inv)
         await ctx.message.delte()
 
-    @commands.command(hidden=True)
+    @commands.hybrid_command(hidden=True)
     @commands.is_owner()
-    async def _attachmentslist(self, ctx, channelid):
+    async def attachmentslist(self, ctx, channelid):
         """Donne la liste des attachements dans le channel"""
         f = open("temp.txt", "w")
         channel = self.client.get_channel(int(channelid))

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import discord
 from discord.ext import commands
-from discord import app_commands
 
 def _help_embed_maker(client: discord.Client, entree: str = 'base') -> discord.Embed:
     if entree == 'base':

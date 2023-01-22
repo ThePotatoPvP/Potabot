@@ -79,7 +79,8 @@ class Potabot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix="p!",help_command=None,intents=intents,application_id=694246129906483311)
         self.cogs_to_quire = ["src.Help"
-                            #"src.AdminCommands",
+                            "src.AdminCommands",
+                            "src.SFWInteractions"
                             #"src.Music.MusicFunctions"
                             ]
     
