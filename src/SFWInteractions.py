@@ -25,7 +25,10 @@ class SFWInteractions(commands.Cog):
     @commands.hybrid_command(aliases=["8b","8ball"],
     brief='To get true wisdom')
     async def eight_ball(self, ctx, *, wonder=None):
-        await ctx.send(random.choice(self.values.eight_b))
+        desc = random.choice(self.values.eight_b)
+        title = f'From {ctx.author.display_name} : {wonder if wonder != None else "Puis-je avoir faive billion rockets ?"}'
+        e = discord.Embed(title=title, description=desc, color = 0xffd1f3)
+        await ctx.send(embed=e)
 
     @commands.hybrid_command(aliases=["clash","punchline"],
     brief='Sends a masterclass punchline to roast someone')
