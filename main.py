@@ -12,7 +12,7 @@ from src.AdminCommands import AdminCommands
 import src.EventsHandler
 
 from src.Music.MusicFunctions import MusicFunctions
-from src.Music.Downloader import SongDownloader
+#from src.Music.Downloader import SongDownloader
 
 #Potato#8999
 #id = 694246129906483311
@@ -36,7 +36,7 @@ client  = commands.Bot(command_prefix = "p!", help_command=None, intents = inten
 
 async def setup():
     client.add_cog(MusicFunctions(client))
-    client.add_cog(SongDownloader(client))
+    #client.add_cog(SongDownloader(client))
     client.add_cog(SFWInteractions(client))
     client.add_cog(Help(client))
     client.add_cog(AdminCommands(client))
