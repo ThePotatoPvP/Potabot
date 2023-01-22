@@ -1,0 +1,10 @@
+.token
+
+.vscode
+
+*__pycache__
+*.m4a
+*.mp3
+*.txt
+
+rules.json
