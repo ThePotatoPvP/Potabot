@@ -102,7 +102,7 @@ class Potabot(commands.Bot):
                 for cog in client.cogs:
                     for command in client.get_cog(cog).get_commands():
                         if command.name == '_' + cmd or cmd in command.aliases:
-                            await command.__call__(FakeContext(message))
+                            await command.__call__(await client.get_context(message))
 
     async def setup_hook(self):
         for cog in self.cogs_to_quire:
