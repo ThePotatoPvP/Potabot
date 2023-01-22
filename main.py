@@ -38,7 +38,7 @@ async def setup():
     client.add_cog(MusicFunctions(client))
     #client.add_cog(SongDownloader(client))
     client.add_cog(SFWInteractions(client))
-    client.add_cog(Help(client))
+    #client.add_cog(Help(client))
     client.add_cog(AdminCommands(client))
 
 
@@ -47,11 +47,6 @@ async def setup():
 ###
 
 
-@client.event
-async def on_ready():
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
-    print("Jui co")
-    await setup()
 
 @client.event
 async def on_member_join(member):
@@ -89,16 +84,35 @@ async def reload(ctx):
         client.remove_cog(cog)
 
     client.add_cog(MusicFunctions(client))
-    client.add_cog(SongDownloader(client))
+    #client.add_cog(SongDownloader(client))
     client.add_cog(SFWInteractions(client))
     client.add_cog(Help(client))
     client.add_cog(AdminCommands(client))
 
 
-@client.command()
-async def pong(ctx):
-    await ctx.send('ping')
+class Potabot(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix="p!",intents=intents,application_id=973304300824563772)
+        self.cogs_to_quire = ["src.Help"
+                            #"src.AdminCommands",
+                            #"src.Music.MusicFunctions"
+                            ]
+    
+    async def on_ready(self):
+        await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
+        print("Jui co")
+        await setup()
+
+    async def setup_hook(self):
+        for cog in self.cogs_to_quire:
+            await self.load_extension(cog)
+        await client.tree.sync()
+
+    async def close(self):
+        await super().close()
+        await self.session.close()
 
 if __name__ == '__main__':
+    client = Potabot()
     token = open('.token','r').read()
     client.run(token)
