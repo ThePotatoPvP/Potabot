@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 import discord
 from discord.ext import commands
+from discord import app_commands
 
 class Help(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.prefix = 'p!'
 
-    @commands.command(aliases=['h'], brief='Shows this page')
-    async def help(self, ctx, *, input='base'):
+
+    async def _help_embed_maker(self, input='base') -> discord.Embed:
         if input == 'base':
             embed = discord.Embed(color=0xf8e3e1)
             for cog in self.client.cogs:
@@ -20,4 +21,12 @@ class Help(commands.Cog):
                     embed.add_field(name=f"​", value=cmd_lst[:-1],inline=False)
         embed.set_author(name=f"{self.client.user.display_name}'s help page",
             icon_url=self.client.user.avatar_url)
-        await ctx.send(embed=embed)
+
+    @commands.command(aliases=['h'], brief='Shows this page', display_name="help")
+    async def help(self, ctx, *, input='base'):
+        await ctx.send(embed=self._help_embed_maker())
+
+    @app_commands.command(name='help', description='Shows all my commands')
+    async def _help(self, interaction: discord.Interaction):
+        await interaction.response.send_message(embed=self._help_embed_maker)
+
