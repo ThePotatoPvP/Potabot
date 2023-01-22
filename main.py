@@ -10,7 +10,6 @@ from src.Help import Help
 
 from src.AdminCommands import AdminCommands
 import src.EventsHandler
-from src.FakeContext import FakeContext
 
 from src.Music.MusicFunctions import MusicFunctions
 #from src.Music.Downloader import SongDownloader
