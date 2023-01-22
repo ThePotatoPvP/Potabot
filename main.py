@@ -10,6 +10,7 @@ from src.Help import Help
 
 from src.AdminCommands import AdminCommands
 import src.EventsHandler
+from src.FakeContext import FakeContext
 
 from src.Music.MusicFunctions import MusicFunctions
 #from src.Music.Downloader import SongDownloader
@@ -89,7 +90,6 @@ class Potabot(commands.Bot):
         await setup()
         
     async def on_message(self, message):
-        print("ayouito")
         if not message.guild and message.author != client.user:
             message.content = "p!process_download " + message.content
             await client.process_commands(message)
@@ -98,13 +98,11 @@ class Potabot(commands.Bot):
             for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
                 await func(client, message)
             if message.content.startswith("p!"):
-                print("ayou que comandato")
                 cmd = message.content.split()[0][2:]
                 for cog in client.cogs:
                     for command in client.get_cog(cog).get_commands():
                         if command.name == '_' + cmd or cmd in command.aliases:
-                            print("ayu le que trouvando")
-                            await command.__call__(message.channel)
+                            await command.__call__(FakeContext(message))
 
     async def setup_hook(self):
         for cog in self.cogs_to_quire:

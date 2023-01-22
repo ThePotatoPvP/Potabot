@@ -16,7 +16,6 @@ def _help_embed_maker(client: discord.Client, entree: str = 'base') -> discord.E
         embed.set_author(name=f"{client.user.display_name}'s help page",
             icon_url=client.user.avatar.url)
         return embed
-    print('lmao prout')
 
 class Help(commands.Cog):
     def __init__(self, client):

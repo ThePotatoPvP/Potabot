@@ -164,7 +164,7 @@ class song_player():
 
     def is_alone(self):
         try:
-            aim_channel = self.ctx.voice_client.channel
+            aim_channel = self.voice_channel
             return len(aim_channel.members) < 2
         except: return True 
 
@@ -219,7 +219,7 @@ class song_player():
 
     async def play(self):
         # grab the user who sent the command
-        user=self.ctx.message.author
+        user=self.ctx.author
         self.voice_channel=user.voice.channel
 
         # make first song readable if it's form youtube
@@ -296,8 +296,6 @@ class MusicFunctions(commands.Cog):
                     with open('sample.json','w') as f:
                             json.dump(result, f)
                     try:
-                        #song = [(result['entries'][i]['id'],yold.extract_info(result['entries'][i]['id'],download=False)['title']) for i in range(len(result['entries']))]
-                        
                         songs = [(url_from_id(result['entries'][i]['id']),result['entries'][i]['title']) for i in range(len(result['entries']))]
                     except:
                         songs = [(query,result['title'])]
