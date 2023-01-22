@@ -88,3 +88,6 @@ class AdminCommands(commands.Cog):
         f.truncate(0)
         f.close()
         await ctx.message.delete()
+
+async def setup(bot: commands.Bot):
+    await bot.add_cog(AdminCommands(bot))
