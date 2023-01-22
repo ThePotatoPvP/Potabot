@@ -52,21 +52,7 @@ async def on_member_join(member):
         role = discord.utils.get(member.guild.roles, id = 466166843132870667)
         await member.add_roles(role)
 
-@client.event
-async def on_message(message):
-    #Check si on reçoit un mp
-    if not message.guild and message.author != client.user:
-        message.content = "p!process_download " + message.content
-        await client.process_commands(message)
-    else:
-        for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
-            await func(client, message)
-        if message.content.startswith("p!"):
-            cmd = message.content.split()[0][2:]
-            for cog in client.cogs:
-                for command in client.get_cog(cog).get_commands():
-                    if command.name == '_' + cmd or cmd in command.aliases:
-                        command.__call__(message.content.replace("p!"+cmd, ""))
+
 
 @client.event
 async def on_command_error(ctx, error):
@@ -101,6 +87,24 @@ class Potabot(commands.Bot):
         await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
         print("Jui co")
         await setup()
+        
+    async def on_message(self, message):
+        print("ayouito")
+        if not message.guild and message.author != client.user:
+            message.content = "p!process_download " + message.content
+            await client.process_commands(message)
+        else:
+            print("en eussou el messago")
+            for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
+                await func(client, message)
+            if message.content.startswith("p!"):
+                print("ayou que comandato")
+                cmd = message.content.split()[0][2:]
+                for cog in client.cogs:
+                    for command in client.get_cog(cog).get_commands():
+                        if command.name == '_' + cmd or cmd in command.aliases:
+                            print("ayu le que trouvando")
+                            await command.__call__(message.channel)
 
     async def setup_hook(self):
         for cog in self.cogs_to_quire:
