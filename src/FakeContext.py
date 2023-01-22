@@ -1,3 +1,5 @@
+import discord
+
 class FakeContext():
     def __init__(self, message):
         self.message = message
@@ -10,5 +12,5 @@ class FakeContext():
     def guild(self):
         return self.message.guild
         
-    async def send(self, sendable):
-        await self.message.channel.send(sendable)
+    async def send(self, content: str=None, embed: discord.Embed=None):
+        await self.message.channel.send(content=content, embed=embed)
