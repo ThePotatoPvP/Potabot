@@ -54,7 +54,7 @@ class SFWInteractions(commands.Cog):
     async def emote(self, ctx):
         await ctx.send(random.choice(self.values.emotes))
 
-    @commands.hybrid_command(aliases=['send','say'],brief='Make the bot say something')
+    @commands.hybrid_command(aliases=['say'],brief='Make the bot say something')
     async def send(self, ctx, *, text='issou'):
         await ctx.send(text)
         await ctx.message.delete()
