@@ -2,13 +2,10 @@
 import discord
 from discord.ext import commands
 import os
-import datetime
 import inspect
 
-from src.SFWInteractions import SFWInteractions
-from src.Help import Help
 
-from src.AdminCommands import AdminCommands
+
 import src.EventsHandler
 
 from src.Music.MusicFunctions import MusicFunctions
@@ -36,8 +33,7 @@ client  = commands.Bot(command_prefix = "p!", help_command=None, intents = inten
 
 async def setup():
     await client.add_cog(MusicFunctions(client))
-    await client.add_cog(SFWInteractions(client))
-    await client.add_cog(AdminCommands(client))
+
 
 
 ###
@@ -71,8 +67,7 @@ async def reload(ctx):
         client.remove_cog(cog)
 
     client.add_cog(MusicFunctions(client))
-    client.add_cog(SFWInteractions(client))
-    client.add_cog(AdminCommands(client))
+
 
 
 class Potabot(commands.Bot):
