@@ -21,8 +21,8 @@ class Help(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.hybrid_command(aliases=['h'], brief='Shows this page')
-    async def help(self, ctx, *, entree='base'):
+    @commands.hybrid_command(aliases=['h'], brief='Shows this page', descritpion='Shows the list of commands or helps using a command')
+    async def help(self, ctx, *, command='base'):
         await ctx.send(embed=_help_embed_maker(self.client))
 
 async def setup(bot: commands.Bot):

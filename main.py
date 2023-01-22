@@ -93,7 +93,6 @@ class Potabot(commands.Bot):
             message.content = "p!process_download " + message.content
             await client.process_commands(message)
         else:
-            print("en eussou el messago")
             for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
                 await func(client, message)
             await client.process_commands(message)
