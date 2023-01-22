@@ -285,8 +285,8 @@ class MusicFunctions(commands.Cog):
         self.musicPlayers = dict()
 
     @commands.command(aliases=["p","pl","ambiance"],
-    brief='Makes the bot play audio')
-    async def play(self, ctx, *, query=None):
+    brief='Makes the bot play audio', display_name="play")
+    async def _play(self, ctx, *, query=None):
         if query:
             match = matching_songs(query)
             if match == []:
@@ -312,8 +312,8 @@ class MusicFunctions(commands.Cog):
             await self.musicPlayers[ctx.guild].play()
 
     @commands.command(aliases=["queue","q","print"], 
-    brief='Shows the next songs to be played')
-    async def print_queue(self, ctx, *, bullshit=None):
+    brief='Shows the next songs to be played', display_name="queue")
+    async def _queue(self, ctx, *, bullshit=None):
         if self.musicPlayers.get(ctx.guild,False):
             songs = self.musicPlayers[ctx.guild].songs[:10]
             desc = ''
@@ -322,11 +322,11 @@ class MusicFunctions(commands.Cog):
             e=discord.Embed(title='Here are the next songs to come',description=desc,color=0xffd1f3)
             await ctx.send(embed=e)
 
-    @commands.command(brief='Searches for a song in the databse')
-    async def query(self, ctx, *, query):
+    @commands.command(aliases=['search'], brief='Searches for a song in the databse', display_name="search")
+    async def _query(self, ctx, *, query):
         match = matching_songs(query)
         if (len(match)>20 or match==[]):
-            await ctx.send('Please provide a better query, found {len(match)} songs')
+            await ctx.send(f'Please provide a better query, found {len(match)} songs')
         else:
             daMess = str()
             for song in match:
@@ -334,8 +334,8 @@ class MusicFunctions(commands.Cog):
             embed = discord.Embed(title='Matching songs :',description=daMess,color=0xffd1f3)
             await ctx.send(embed=embed)
 
-    @commands.command(brief='Does the maths for the length of the playlist')
-    async def calculus(self, ctx, tab=musicas):
+    @commands.command(aliases=['calc'],brief='Does the maths for the length of the playlist', display_name="calc")
+    async def _calculus(self, ctx, tab=musicas):
         #if self.musicPlayers.get(ctx.guild,False):
         #    tab = self.musicPlayers[ctx.guild].songs
         totalsec = 0
@@ -358,8 +358,8 @@ class MusicFunctions(commands.Cog):
             await ctx.send("Jo suis cassé")
 
     @commands.command(aliases=['s','sk','ski'],
-    brief='Skips the current song')
-    async def skip(self, ctx): 
+    brief='Skips the current song', display_name="skip")
+    async def _skip(self, ctx): 
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].skip()
@@ -368,8 +368,8 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['d','dco','disconnect'],
-    brief='Disconnects the bot from voice channel')
-    async def deco(self, ctx): 
+    brief='Disconnects the bot from voice channel', display_name="deco")
+    async def _deco(self, ctx): 
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 await self.musicPlayers[ctx.guild].deco()
@@ -378,8 +378,8 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['l','lop', 'boucle'],
-    brief='Puts the current song on loop')
-    async def loop(self, ctx):
+    brief='Puts the current song on loop', display_name="loop")
+    async def _loop(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].goloop()
@@ -388,8 +388,8 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['lq'],
-    brief='Puts the current playlist on loop')
-    async def loopqueue(self, ctx):
+    brief='Puts the current playlist on loop', display_name="loopqueue")
+    async def _loopqueue(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].goloopqueue()
@@ -398,8 +398,8 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['shuffle', 'random', 'melange'],
-    brief='Shuffles the list of songs to come')
-    async def melangix(self, ctx):
+    brief='Shuffles the list of songs to come', display_name="shuffle")
+    async def _shuffle(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].melangix()
@@ -408,26 +408,26 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['pt','ptop'],
-    brief='Adds a song as first position in the wait list')
-    async def playtop(self, ctx, *, query=None):
+    brief='Adds a song as first position in the wait list', display_name="playtop")
+    async def _playtop(self, ctx, *, query=None):
         if self.musicPlayers.get(ctx.guild, False):
-            await self.play(ctx=ctx, query=query)
+            await self._play(ctx=ctx, query=query)
             await self.musicPlayers[ctx.guild].playtop()
         else:
-            await self.play(ctx=ctx, query=query)
+            await self._play(ctx=ctx, query=query)
 
     @commands.command(aliases=['ps','pskip'], 
-    brief='Skips the current song to play the requested one')
-    async def playskip(self, ctx, *, query=None):
+    brief='Skips the current song to play the requested one', display_name="playskip")
+    async def _playskip(self, ctx, *, query=None):
         if self.musicPlayers.get(ctx.guild, False):
-            await self.playtop(ctx=ctx, query=query)
-            await self.skip(ctx)
+            await self._playtop(ctx=ctx, query=query)
+            await self._skip(ctx)
         else:
-            await self.play(ctx=ctx, query=query)
+            await self._play(ctx=ctx, query=query)
 
     @commands.command(aliases=['tocome'],
-    brief='Shows the music waiting to join the playlist')
-    async def upcoming(self, ctx):
+    brief='Shows the music waiting to join the playlist', display_name="playskip")
+    async def _upcoming(self, ctx):
         t='```'
         tab = os.listdir('./ressources/Musica/Update')
         for song in tab:

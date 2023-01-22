@@ -35,11 +35,11 @@ client  = commands.Bot(command_prefix = "p!", help_command=None, intents = inten
 
 
 async def setup():
-    client.add_cog(MusicFunctions(client))
+    await client.add_cog(MusicFunctions(client))
     #client.add_cog(SongDownloader(client))
-    client.add_cog(SFWInteractions(client))
+    await client.add_cog(SFWInteractions(client))
     #client.add_cog(Help(client))
-    client.add_cog(AdminCommands(client))
+    await client.add_cog(AdminCommands(client))
 
 
 ###
@@ -64,7 +64,9 @@ async def on_message(message):
         for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
             await func(client, message)
         if message.content.startswith("P!"):
-            message.content = "p!" + message.content[2:]
+            message.content = "p!_" + message.content[2:]
+        elif message.content.starswith("p!"):
+            message.content = "p!_" + message.content[2:]
         await client.process_commands(message)
 
 @client.event
@@ -86,13 +88,13 @@ async def reload(ctx):
     client.add_cog(MusicFunctions(client))
     #client.add_cog(SongDownloader(client))
     client.add_cog(SFWInteractions(client))
-    client.add_cog(Help(client))
+    #client.add_cog(Help(client))
     client.add_cog(AdminCommands(client))
 
 
 class Potabot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix="p!",intents=intents,application_id=973304300824563772)
+        super().__init__(command_prefix="p!",help_command=None,intents=intents,application_id=694246129906483311)
         self.cogs_to_quire = ["src.Help"
                             #"src.AdminCommands",
                             #"src.Music.MusicFunctions"
@@ -108,9 +110,6 @@ class Potabot(commands.Bot):
             await self.load_extension(cog)
         await client.tree.sync()
 
-    async def close(self):
-        await super().close()
-        await self.session.close()
 
 if __name__ == '__main__':
     client = Potabot()
