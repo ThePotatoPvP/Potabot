@@ -163,7 +163,6 @@ class song_player():
         self.loop, self.loopqueue = False, False
         self.mode=mode
         self.counter=0
-        self.queue_message = None
         self.musicPlayers = musicPlayers
 
     @property
