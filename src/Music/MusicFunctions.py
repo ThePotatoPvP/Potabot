@@ -363,7 +363,7 @@ class MusicFunctions(commands.Cog):
             self.message = await ctx.send(embed=make_embed(self.musicPlayers[ctx.guild].songs, self.musicPlayers[ctx.guild].counter), view=PlayerButtons(self.musicPlayers[ctx.guild], ctx, self))
 
     @commands.command(aliases=['search'], brief='Searches for a song in the databse', display_name="search")
-    async def query(self, ctx, *, query):
+    async def query(self, ctx, *, query=''):
         match = matching_songs(query)
         if (len(match)>20 or match==[]):
             await ctx.send(f'Please provide a better query, found {len(match)} songs')
