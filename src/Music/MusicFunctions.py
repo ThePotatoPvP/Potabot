@@ -426,7 +426,7 @@ class MusicFunctions(commands.Cog):
         except MusicalError as e:
             await ctx.send(e.message)
 
-    @commands.command(aliases=['shuffle', 'random', 'melange'],
+    @commands.command(aliases=['random', 'melange'],
     brief='Shuffles the list of songs to come', display_name="shuffle")
     async def shuffle(self, ctx):
         try:
