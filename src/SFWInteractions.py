@@ -22,7 +22,7 @@ class SFWInteractions(commands.Cog):
     async def ping(self, ctx):
         await ctx.send('pong')
 
-    @commands.hybrid_command(aliases=["8b","8ball"],
+    @commands.hybrid_command(name='8b',aliases=["8ball"],
     brief='To get true wisdom')
     async def eight_ball(self, ctx, *, wonder=None):
         desc = random.choice(self.values.eight_b)

@@ -107,6 +107,17 @@ def gotoreview():
     for i in r:
         os.rename(f'./ressources/Musica/Update/{r}',f'./ressources/Musica/Review/{r}')
 
+def make_embed(tab: list, counter: int) -> discord.Embed:
+    embed = discord.Embed(title="Currently playing",
+                          colour=0xFFc4d5,
+                          description="")
+    SongDisplaying = str('```ansi\n')
+    for song in [tab[i % len(tab)]for i in range(counter - 1, counter + 20)]:
+      SongDisplaying += (song == tab[counter]) * "[0;31m" + song.split("(")[0].split(
+        '[')[0] + '\n' + (song == tab[counter]) * "[0m"
+    embed.add_field(name="", value=SongDisplaying + '```', inline=True)
+    return embed
+
 ###
 #   Player Class
 ###
@@ -151,6 +162,8 @@ class song_player():
         self.bot = client
         self.loop, self.loopqueue = False, False
         self.mode=mode
+        self.counter=0
+        self.queue_message = None
         self.musicPlayers = musicPlayers
 
     @property
@@ -180,6 +193,10 @@ class song_player():
 
     def skip(self):
         self.player.stop()
+
+    def previous(self):
+        self.counter -= 2
+        self.skip
         
     def goloop(self):
         self.loop = not self.loop
@@ -216,6 +233,7 @@ class song_player():
             pass
         await self.bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = 'p!help'))
         self.musicPlayers[self.guild] = None
+        self = None
 
     async def play(self):
         # grab the user who sent the command
@@ -231,45 +249,63 @@ class song_player():
             #await ctx.send(f"coming to {channel}")
             self.player = await self.voice_channel.connect()
             self.melangix()
-            while self.songs_left:
-                if type(self.songs[0]) is tuple and type(self.songs[0][0]) is str:
-                    self.songs[0] = (await getVidFromLink(self.songs[0][0]),self.songs[0][1])
+            while self.counter < self.songs_left:
+                if type(self.songs[self.counter]) is tuple and type(self.songs[self.counter][0]) is str:
+                    self.songs[self.counter] = (await getVidFromLink(self.songs[self.counter][0]),self.songs[self.counter][1])
                     
-                if type(self.songs[0]) is str:
-                    if self.mode == 'review': media = './ressources/Musica/Review/' + self.songs[0]
-                    else: media = './ressources/Musica/Main/' + self.songs[0]
-                    title = song_to_str(self.songs[0])
+                if type(self.songs[self.counter]) is str:
+                    if self.mode == 'review': media = './ressources/Musica/Review/' + self.songs[self.counter]
+                    else: media = './ressources/Musica/Main/' + self.songs[self.counter]
+                    title = song_to_str(self.songs[self.counter])
                     media = discord.FFmpegPCMAudio(media)
                 else:
-                    media = self.songs[0][0]
-                    title = song_to_str(self.songs[0])
-                if self.songs_left>=2 and type(self.songs[1]) is tuple:
-                    self.songs[1] = (await getVidFromLink(self.songs[1][0]), self.songs[1][1])
+                    media = self.songs[self.counter][0]
+                    title = song_to_str(self.songs[self.counter])
+                if self.songs_left>=2 and type(self.songs[self.counter+1]) is tuple:
+                    self.songs[self.counter+1] = (await getVidFromLink(self.songs[self.counter+1][0]), self.songs[self.counter+1][1])
                     print("str has been transformed")
                 
                 print(f'{type(media)} : {media}\n title : {title}\n')
                 self.player.play(media)
 
                 #Changing status, only for the main server
-                if str(self.guild.id) == '386474283804917760' and type(self.songs[0]) is str: 
+                if str(self.guild.id) == '386474283804917760' and type(self.songs[self.counter]) is str: 
                     await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(title))
 
                 while self.player.is_playing():
                     await asyncio.sleep(1)
 
                 if self.is_alone():
-                    print('solo tete soulo')
                     await self.deco()
 
                 if not self.loop:
-                    if self.loopqueue:
-                        self.songs.append(self.songs[0])
-                    self.songs.pop(0)
-
-            await self.deco()
-
+                    self.counter += 1
+            
+            if self.loopqueue:
+                self.counter = 1
+                await self.play()
+            else:
+                await self.deco()
         else:
             await self.ctx.send("Vas dans un vocal avant de m'appeler, idiot")
+
+class PlayerButtons(discord.ui.View):
+    def __init__(self, song_player, ctx):
+        self.song_player = song_player
+        super().__init__(timeout=None)
+        self.ctx = ctx
+    
+    @discord.ui.button(label=">", style=discord.ButtonStyle.blurple, custom_id="next_song")
+    async def _skip(self, interaction, button) -> None:
+        await self.song_player.skip()
+        await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
+        await interaction.response.defer()
+
+    @discord.ui.button(label="<", style=discord.ButtonStyle.blurple, custom_id="previous_song")
+    async def _previous(self, interaction, button) -> None:
+        await self.song_player.previous()
+        await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
+        await interaction.response.defer()
 
 
 
@@ -286,7 +322,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=["p","pl","ambiance"],
     brief='Makes the bot play audio', display_name="play")
-    async def _play(self, ctx, *, query=None):
+    async def play(self, ctx, *, query=None):
         if query:
             match = matching_songs(query)
             if match == []:
@@ -309,19 +345,14 @@ class MusicFunctions(commands.Cog):
             self.musicPlayers[ctx.guild] = song_player(self.musicPlayers, ctx, ctx.guild, songs, self.client, 'casu')
             await self.musicPlayers[ctx.guild].play()
 
-    @commands.command(aliases=["queue","q","print"], 
+    @commands.hybrid_command(aliases=["queue","q","print"], 
     brief='Shows the next songs to be played', display_name="queue")
-    async def _queue(self, ctx, *, bullshit=None):
+    async def queue(self, ctx, *, bullshit=None):
         if self.musicPlayers.get(ctx.guild,False):
-            songs = self.musicPlayers[ctx.guild].songs[:10]
-            desc = ''
-            for i in range(len(songs)):
-                desc += f'{i}: {song_to_str(songs[i])}\n'
-            e=discord.Embed(title='Here are the next songs to come',description=desc,color=0xffd1f3)
-            await ctx.send(embed=e)
+            await ctx.send(embed=make_embed(self.musicPlayers[ctx.guild].songs, self.musicPlayers[ctx.guild].counter), view=PlayerButtons(self.musicPlayers[ctx.guild], ctx))
 
     @commands.command(aliases=['search'], brief='Searches for a song in the databse', display_name="search")
-    async def _query(self, ctx, *, query):
+    async def query(self, ctx, *, query):
         match = matching_songs(query)
         if (len(match)>20 or match==[]):
             await ctx.send(f'Please provide a better query, found {len(match)} songs')
@@ -333,7 +364,7 @@ class MusicFunctions(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command(aliases=['calc'],brief='Does the maths for the length of the playlist', display_name="calc")
-    async def _calculus(self, ctx, tab=musicas):
+    async def calculus(self, ctx, tab=musicas):
         #if self.musicPlayers.get(ctx.guild,False):
         #    tab = self.musicPlayers[ctx.guild].songs
         totalsec = 0
@@ -357,7 +388,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['s','sk','ski'],
     brief='Skips the current song', display_name="skip")
-    async def _skip(self, ctx): 
+    async def skip(self, ctx): 
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].skip()
@@ -367,7 +398,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['d','dco','disconnect'],
     brief='Disconnects the bot from voice channel', display_name="deco")
-    async def _deco(self, ctx): 
+    async def deco(self, ctx): 
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 await self.musicPlayers[ctx.guild].deco()
@@ -377,7 +408,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['l','lop', 'boucle'],
     brief='Puts the current song on loop', display_name="loop")
-    async def _loop(self, ctx):
+    async def loop(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].goloop()
@@ -387,7 +418,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['lq'],
     brief='Puts the current playlist on loop', display_name="loopqueue")
-    async def _loopqueue(self, ctx):
+    async def loopqueue(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].goloopqueue()
@@ -397,7 +428,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['shuffle', 'random', 'melange'],
     brief='Shuffles the list of songs to come', display_name="shuffle")
-    async def _shuffle(self, ctx):
+    async def shuffle(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].melangix()
@@ -407,7 +438,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['pt','ptop'],
     brief='Adds a song as first position in the wait list', display_name="playtop")
-    async def _playtop(self, ctx, *, query=None):
+    async def playtop(self, ctx, *, query=None):
         if self.musicPlayers.get(ctx.guild, False):
             await self._play(ctx=ctx, query=query)
             await self.musicPlayers[ctx.guild].playtop()
@@ -416,7 +447,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['ps','pskip'], 
     brief='Skips the current song to play the requested one', display_name="playskip")
-    async def _playskip(self, ctx, *, query=None):
+    async def playskip(self, ctx, *, query=None):
         if self.musicPlayers.get(ctx.guild, False):
             await self._playtop(ctx=ctx, query=query)
             await self._skip(ctx)
@@ -425,7 +456,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['tocome'],
     brief='Shows the music waiting to join the playlist', display_name="playskip")
-    async def _upcoming(self, ctx):
+    async def upcoming(self, ctx):
         t='```'
         tab = os.listdir('./ressources/Musica/Update')
         for song in tab:
