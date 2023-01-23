@@ -292,22 +292,29 @@ class song_player():
 
 
 class PlayerButtons(discord.ui.View):
-    def __init__(self, song_player, ctx):
+    def __init__(self, song_player, ctx, message):
         self.song_player = song_player
         super().__init__(timeout=None)
         self.ctx = ctx
+        self.announce = message
     
     @discord.ui.button(label="<", style=discord.ButtonStyle.blurple, custom_id="previous_song")
     async def _previous(self, interaction, button) -> None:
         self.song_player.previous()
-        await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
-        await interaction.response.defer()
+        if self.announce:
+            await self.announce.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
+        else:
+            await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
+            await interaction.response.defer()
 
     @discord.ui.button(label=">", style=discord.ButtonStyle.blurple, custom_id="next_song")
     async def _skip(self, interaction, button) -> None:
         self.song_player.skip()
-        await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
-        await interaction.response.defer()
+        if self.announce:
+            await self.announce.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
+        else:
+            await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
+            await interaction.response.defer()
 
 
 
