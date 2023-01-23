@@ -113,7 +113,7 @@ def make_embed(tab: list, counter: int) -> discord.Embed:
                           description="")
     SongDisplaying = str('```ansi\n')
     for song in [tab[i % len(tab)]for i in range(counter - 1, counter + 20)]:
-      SongDisplaying += (song == tab[counter]) * "[0;31m" + song.split("(")[0].split(
+      SongDisplaying += (song == tab[counter]) * "[0;31m" + song_to_str(song).split("(")[0].split(
         '[')[0] + '\n' + (song == tab[counter]) * "[0m"
     embed.add_field(name="", value=SongDisplaying + '```', inline=True)
     return embed
