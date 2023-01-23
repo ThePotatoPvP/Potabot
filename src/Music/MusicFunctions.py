@@ -330,6 +330,7 @@ class MusicFunctions(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.musicPlayers = dict()
+        self.message = None
 
     @commands.command(aliases=["p","pl","ambiance"],
     brief='Makes the bot play audio', display_name="play")
