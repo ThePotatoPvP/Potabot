@@ -345,7 +345,7 @@ class MusicFunctions(commands.Cog):
             self.musicPlayers[ctx.guild] = song_player(self.musicPlayers, ctx, ctx.guild, songs, self.client, 'casu')
             await self.musicPlayers[ctx.guild].play()
 
-    @commands.hybrid_command(aliases=["queue","q","print"], 
+    @commands.hybrid_command(aliases=["q","print"], 
     brief='Shows the next songs to be played', display_name="queue")
     async def queue(self, ctx, *, bullshit=None):
         if self.musicPlayers.get(ctx.guild,False):
