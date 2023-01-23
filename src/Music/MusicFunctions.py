@@ -292,11 +292,11 @@ class song_player():
 
 
 class PlayerButtons(discord.ui.View):
-    def __init__(self, song_player, ctx, message):
+    def __init__(self, song_player, ctx, MusicFunctions):
         self.song_player = song_player
         super().__init__(timeout=None)
         self.ctx = ctx
-        self.announce = message
+        self.announce = MusicFunctions.message
     
     @discord.ui.button(label="<", style=discord.ButtonStyle.blurple, custom_id="previous_song")
     async def _previous(self, interaction, button) -> None:
@@ -360,7 +360,7 @@ class MusicFunctions(commands.Cog):
     brief='Shows the next songs to be played', display_name="queue")
     async def queue(self, ctx, *, bullshit=None):
         if self.musicPlayers.get(ctx.guild,False):
-            await ctx.send(embed=make_embed(self.musicPlayers[ctx.guild].songs, self.musicPlayers[ctx.guild].counter), view=PlayerButtons(self.musicPlayers[ctx.guild], ctx))
+            self.message = await ctx.send(embed=make_embed(self.musicPlayers[ctx.guild].songs, self.musicPlayers[ctx.guild].counter), view=PlayerButtons(self.musicPlayers[ctx.guild], ctx, self))
 
     @commands.command(aliases=['search'], brief='Searches for a song in the databse', display_name="search")
     async def query(self, ctx, *, query):
