@@ -289,23 +289,27 @@ class song_player():
         else:
             await self.ctx.send("Vas dans un vocal avant de m'appeler, idiot")
 
+
+
 class PlayerButtons(discord.ui.View):
     def __init__(self, song_player, ctx):
         self.song_player = song_player
         super().__init__(timeout=None)
         self.ctx = ctx
     
-    @discord.ui.button(label=">", style=discord.ButtonStyle.blurple, custom_id="next_song")
-    async def _skip(self, interaction, button) -> None:
-        await self.song_player.skip()
+    @discord.ui.button(label="<", style=discord.ButtonStyle.blurple, custom_id="previous_song")
+    async def _previous(self, interaction, button) -> None:
+        self.song_player.previous()
         await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
         await interaction.response.defer()
 
-    @discord.ui.button(label="<", style=discord.ButtonStyle.blurple, custom_id="previous_song")
-    async def _previous(self, interaction, button) -> None:
-        await self.song_player.previous()
+    @discord.ui.button(label=">", style=discord.ButtonStyle.blurple, custom_id="next_song")
+    async def _skip(self, interaction, button) -> None:
+        self.song_player.skip()
         await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
         await interaction.response.defer()
+
+
 
 
 
