@@ -303,7 +303,7 @@ class PlayerButtons(discord.ui.View):
         if self.musf.message:
             await self.musf.message.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
         else:
-            await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
+            await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter+1))
             await interaction.response.defer()
 
     @discord.ui.button(label=">", style=discord.ButtonStyle.blurple, custom_id="next_song")
@@ -312,7 +312,7 @@ class PlayerButtons(discord.ui.View):
         if self.musf.message:
             await self.musf.message.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
         else:
-            await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
+            await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter+1))
             await interaction.response.defer()
 
 
@@ -476,3 +476,7 @@ class MusicFunctions(commands.Cog):
                 t=f'```'
             t+=song_to_str(song) + '\n'
         await ctx.send(t+'```')
+
+
+async def setup(bot: commands.Bot):
+    await bot.add_cog(MusicFunctions(bot))

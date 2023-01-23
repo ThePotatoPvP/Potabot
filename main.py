@@ -32,7 +32,7 @@ client  = commands.Bot(command_prefix = "p!", help_command=None, intents = inten
 
 
 async def setup():
-    await client.add_cog(MusicFunctions(client))
+    pass
 
 
 
@@ -66,17 +66,14 @@ async def reload(ctx):
     for cog in client.cogs():
         client.remove_cog(cog)
 
-    client.add_cog(MusicFunctions(client))
-
-
 
 class Potabot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix="p!",help_command=None,intents=intents,application_id=694246129906483311)
         self.cogs_to_quire = ["src.Help",
                             "src.AdminCommands",
-                            "src.SFWInteractions"
-                            #"src.Music.MusicFunctions"
+                            "src.SFWInteractions",
+                            "src.Music.MusicFunctions"
                             ]
     
     async def on_ready(self):
