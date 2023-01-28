@@ -114,3 +114,4 @@ async def on_message(message):
 #  Le démarreur  #
 ##################
 
+client.run(token)
