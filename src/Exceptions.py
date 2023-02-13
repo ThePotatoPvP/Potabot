@@ -9,5 +9,5 @@ class MusicalError(Exception):
 class NotDownloadable(Exception):
     def __init__(self, media=None, media_type=None):
         if media_type == "file": self.message = f'Failed to download `{media}` please try again, or contact an administrator.'
-        elif media_type == "youtube": self.message = f'Failed to download `{media}` make sure it is a valid link,if it the content may be restricted.'
+        elif media_type == "youtube": self.message = f'Failed to download `{media}` make sure it is a valid link,if so the content may be restricted.'
         else : self.message = f'Failed to download `{media}`'
