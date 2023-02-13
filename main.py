@@ -4,8 +4,6 @@ from discord.ext import commands
 import os
 import inspect
 
-
-
 import src.EventsHandler
 
 from src.Music.MusicFunctions import MusicFunctions
@@ -31,10 +29,6 @@ intents.members = True
 client  = commands.Bot(command_prefix = "p!", help_command=None, intents = intents)
 
 
-async def setup():
-    pass
-
-
 
 ###
 #   Events
@@ -47,8 +41,6 @@ async def on_member_join(member):
     if "wati" in str(member.guild).lower():
         role = discord.utils.get(member.guild.roles, id = 466166843132870667)
         await member.add_roles(role)
-
-
 
 @client.event
 async def on_command_error(ctx, error):
