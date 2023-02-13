@@ -18,16 +18,19 @@ class SFWInteractions(commands.Cog):
         self.client = client
         self.values = sfw_init()
 
-    @commands.command(brief='Answers pong')
+    @commands.hybrid_command(brief='Answers pong')
     async def ping(self, ctx):
         await ctx.send('pong')
 
-    @commands.command(aliases=["8b","8ball"],
+    @commands.hybrid_command(name='8b',aliases=["8ball"],
     brief='To get true wisdom')
     async def eight_ball(self, ctx, *, wonder=None):
-        await ctx.send(random.choice(self.values.eight_b))
+        desc = random.choice(self.values.eight_b)
+        title = f'From {ctx.author.display_name} : {wonder if wonder != None else "Puis-je avoir faive billion rockets ?"}'
+        e = discord.Embed(title=title, description=desc, color = 0xffd1f3)
+        await ctx.send(embed=e)
 
-    @commands.command(aliases=["clash","punchline"],
+    @commands.hybrid_command(aliases=["clash","punchline"],
     brief='Sends a masterclass punchline to roast someone')
     async def roast(self, ctx, target : discord.Member, * , bullshit = None):
         desc = random.choice(self.values.punchlines)
@@ -35,7 +38,7 @@ class SFWInteractions(commands.Cog):
         e = discord.Embed(title=title, description=desc, color = 0xffd1f3)
         await ctx.send(embed=e)
 
-    @commands.command(aliases=['disquette'],
+    @commands.hybrid_command(aliases=['disquette','pecho'],
     brief='Sends a cute pickupline to secure a date')
     async def luv(self, ctx, target : discord.Member, *, bullshit = None):
         desc = random.choice(self.values.disquettes)
@@ -43,25 +46,30 @@ class SFWInteractions(commands.Cog):
         e = discord.Embed(title=title, description=desc, color = 0xffd1f3)
         await ctx.send(embed=e)
 
-    @commands.command(aliases=['image'], 
+    @commands.hybrid_command(aliases=['image'], 
     brief='Sends a pic of a potato')
     async def pic(self, ctx):
         e = discord.Embed(title="Here's a potato pic", color=0xffd1f3)
         e.set_image(url= random.choice(self.values.images))
         await ctx.send(embed = e)
 
-    @commands.command(brief='Sends an emote judged funny')
-    async def rdm(self, ctx):
+    @commands.hybrid_command(aliases=['rdm'],brief='Sends an emote judged funny')
+    async def emote(self, ctx):
         await ctx.send(random.choice(self.values.emotes))
 
-    @commands.command(brief='Make the bot say something')
-    async def say(self, ctx, *, text='issou'):
+    @commands.hybrid_command(aliases=['say'],brief='Make the bot say something')
+    async def send(self, ctx, *, text='issou'):
         await ctx.send(text)
-        await ctx.message.delete()
+        try:
+            await ctx.message.delete()
+        except: pass
 
-    @commands.command(brief='Make the bot say something, privately')
+    @commands.hybrid_command(brief='Make the bot say something, privately')
     async def mp(self, ctx, target : discord.Member, *, text='pd'):
         try:
             await target.send(text)
-        except: pass 
-        ctx.message.delete()
+            await ctx.message.delete()
+        except: pass
+        
+async def setup(bot: commands.Bot):
+    await bot.add_cog(SFWInteractions(bot))

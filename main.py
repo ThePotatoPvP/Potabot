@@ -2,17 +2,14 @@
 import discord
 from discord.ext import commands
 import os
-import datetime
 import inspect
 
-from src.SFWInteractions import SFWInteractions
-from src.Help import Help
 
-from src.AdminCommands import AdminCommands
+
 import src.EventsHandler
 
 from src.Music.MusicFunctions import MusicFunctions
-from src.Music.Downloader import SongDownloader
+#from src.Music.Downloader import SongDownloader
 
 #Potato#8999
 #id = 694246129906483311
@@ -35,11 +32,8 @@ client  = commands.Bot(command_prefix = "p!", help_command=None, intents = inten
 
 
 async def setup():
-    client.add_cog(MusicFunctions(client))
-    client.add_cog(SongDownloader(client))
-    client.add_cog(SFWInteractions(client))
-    client.add_cog(Help(client))
-    client.add_cog(AdminCommands(client))
+    pass
+
 
 
 ###
@@ -47,11 +41,6 @@ async def setup():
 ###
 
 
-@client.event
-async def on_ready():
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
-    print("Jui co")
-    await setup()
 
 @client.event
 async def on_member_join(member):
@@ -59,18 +48,7 @@ async def on_member_join(member):
         role = discord.utils.get(member.guild.roles, id = 466166843132870667)
         await member.add_roles(role)
 
-@client.event
-async def on_message(message):
-    #Check si on reçoit un mp
-    if not message.guild and message.author != client.user:
-        message.content = "p!process_download " + message.content
-        await client.process_commands(message)
-    else:
-        for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
-            await func(client, message)
-        if message.content.startswith("P!"):
-            message.content = "p!" + message.content[2:]
-        await client.process_commands(message)
+
 
 @client.event
 async def on_command_error(ctx, error):
@@ -88,17 +66,37 @@ async def reload(ctx):
     for cog in client.cogs():
         client.remove_cog(cog)
 
-    client.add_cog(MusicFunctions(client))
-    client.add_cog(SongDownloader(client))
-    client.add_cog(SFWInteractions(client))
-    client.add_cog(Help(client))
-    client.add_cog(AdminCommands(client))
 
+class Potabot(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix="p!",help_command=None,intents=intents,application_id=694246129906483311)
+        self.cogs_to_quire = ["src.Help",
+                            "src.AdminCommands",
+                            "src.SFWInteractions",
+                            "src.Music.MusicFunctions"
+                            ]
+    
+    async def on_ready(self):
+        await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
+        print("Jui co")
+        await setup()
+        
+    async def on_message(self, message):
+        if not message.guild and message.author != client.user:
+            message.content = "p!process_download " + message.content
+            await client.process_commands(message)
+        else:
+            for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
+                await func(client, message)
+            await client.process_commands(message)
 
-@client.command()
-async def pong(ctx):
-    await ctx.send('ping')
+    async def setup_hook(self):
+        for cog in self.cogs_to_quire:
+            await self.load_extension(cog)
+        await client.tree.sync()
+
 
 if __name__ == '__main__':
+    client = Potabot()
     token = open('.token','r').read()
     client.run(token)

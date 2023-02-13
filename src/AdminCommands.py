@@ -23,8 +23,8 @@ class AdminCommands(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def statut(self,ctx,*,kk):
-        if kk == "":
+    async def statut(self,ctx,*,statut=''):
+        if statut == "":
             await self.client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
         else:
             await self.client.change_presence(status=discord.Status.online, activity=discord.Game(kk))
@@ -88,3 +88,6 @@ class AdminCommands(commands.Cog):
         f.truncate(0)
         f.close()
         await ctx.message.delete()
+
+async def setup(bot: commands.Bot):
+    await bot.add_cog(AdminCommands(bot))
