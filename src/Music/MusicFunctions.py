@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from ..Exceptions import MusicalError
+from SongPlayer import SongPlayer, song_to_str
 
 import discord
 from discord.ext import commands
@@ -111,40 +112,71 @@ def make_embed(tab: list, counter: int) -> discord.Embed:
 
 
 
+class PlayerEmbed(discord.Embed):
+    def __init__(self, player: SongPlayer, msg: discord.InteractionMessage):
+        self.player = player 
+        self.color = 0xffc4d5
+        self.msg = msg
+        self.set_author(name=f"{self.player.bot.user.display_name}'s playlist", icon_url=self.player.bot.user.display_avatar.url)
+
+    def update_desc(self) -> None:
+        """Updates the description to match the current song playing"""
+        desc: str = "```ansi\n"
+        for song in [self.player.songs[i % len(self.player.songs)]for i in range(self.player.counter - 1, self.player.counter + 20)]:
+            desc += (song == self.player.songs[self.player.counter]) * "[0;31m" + song_to_str(song).split("(")[0].split('[')[0] \
+                 + '\n' + (song == self.player.songs[self.player.counter]) * "[0m"
+        self.description = desc
+
+    def update_footer(self) -> None:
+        if self.player.loop:
+            self.set_footer(text="The current song is on loop.")
+        elif self.player.loopqueue:
+            self.set_footer(text="The current playlist is on loop.")
+        else:
+            self.remove_footer()
+
+    def _update(self) -> None:
+        if self.player.songs_left:
+            self.update_desc()
+            self.update_footer()
+            self.needButtons = True
+        else:
+            self.description = "Finished playing for now."
+            self.remove_footer()
+            self.needButtons = False
+
+
+    async def update(self) -> None:
+        self._update()
+        await self.msg.edit(embed=self, view = PlayerButtons(self.player, em) if self.needButtons else None)
+
+    
 
 class PlayerButtons(discord.ui.View):
-    def __init__(self, song_player, ctx, MusicFunctions):
-        self.song_player = song_player
+    def __init__(self, em: PlayerEmbed):
         super().__init__(timeout=None)
-        self.ctx = ctx
-        self.musf = MusicFunctions
+        self.embed = em
     
     @discord.ui.button(label="<", style=discord.ButtonStyle.blurple, custom_id="previous_song")
     async def _previous(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        self.song_player.previous()
-        if self.musf.message:
-            await self.musf.message.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
-        else:
-            await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter+1))
-            await interaction.response.defer()
+        self.embed.player.previous()
+        await self.embed.update()
+        await interaction.response.defer()
 
     @discord.ui.button(label=">", style=discord.ButtonStyle.blurple, custom_id="next_song")
     async def _skip(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        self.song_player.skip()
-        if self.musf.message:
-            await self.musf.message.edit(embed=make_embed(self.song_player.songs, self.song_player.counter))
-        else:
-            await self.ctx.edit(embed=make_embed(self.song_player.songs, self.song_player.counter+1))
-            await interaction.response.defer()
+        self.embed.player.skip()
+        await self.embed.update()
+        await interaction.response.defer()
 
     @discord.ui.button(label="Loop", style=discord.ButtonStyle.blurple, custom_id="loop")
     async def _loop(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.song_player.goloop()
+        self.embed.player.goloop()
         await interaction.response.defer()
 
     @discord.ui.button(label="Loop queue", style=discord.ButtonStyle.blurple, custom_id="loopqueue")
     async def _loop(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.song_player.goloopqueue()
+        self.embed.player.goloopqueue()
         await interaction.response.defer()
 
 
@@ -184,7 +216,7 @@ class MusicFunctions(commands.Cog):
         if self.musicPlayers.get(ctx.guild,False):
             self.musicPlayers[ctx.guild].add_songs(songs)
         else: 
-            self.musicPlayers[ctx.guild] = song_player(self.musicPlayers, ctx, ctx.guild, songs, self.client, 'casu')
+            self.musicPlayers[ctx.guild] = SongPlayer(self.musicPlayers, ctx, ctx.guild, songs, self.client, 'casu')
             await self.musicPlayers[ctx.guild].play()
 
     @commands.hybrid_command(aliases=["q","print"], 

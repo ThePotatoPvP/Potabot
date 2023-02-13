@@ -14,7 +14,7 @@ def song_to_str(song) -> str:
     if type(song) is str: return song[:-4]
     return song[1]
 
-class song_player():
+class SongPlayer():
     """Creates an instance of the bot to play music in a voice channel
     
         3 possible modes, the names are rather intuitives so I  won't explain
