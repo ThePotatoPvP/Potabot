@@ -20,7 +20,7 @@ async def wednesday_event(client : discord.Client, message : discord.Message):
         already_sent_wednesday = False
 
 async def latex_event(client : discord.Client, message : discord.Message):
-    epic_latex = 'https://tenor.com/fr/view/epic-latex-fail-latex-latex-fail-bad-latex-bad-tex-gif-26615851'
+    epic_latex = 'https://tenor.com/view/epic-latex-fail-latex-latex-fail-bad-latex-bad-tex-gif-26615851'
     if (message.channel.id == 717005277706059783) and (message.author.id == 510789298321096704) and ('Compile Error!' in message.content):
         shame = await message.channel.send(epic_latex)
         await asyncio.sleep(1200)
