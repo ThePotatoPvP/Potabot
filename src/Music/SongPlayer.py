@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from YTDLSource import YTDLSource
+from src.Music.YTDLSource import YTDLSource
 
 import discord
 from tinytag import TinyTag
@@ -140,7 +140,7 @@ class SongPlayer():
             self.player = await self.voice_channel.connect()
             self.melangix()
             while self.songs_left:
-                self.prepare_next()
+                await self.prepare_next()
 
                 self.player.play(self.media)
 

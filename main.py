@@ -67,20 +67,15 @@ class Potabot(commands.Bot):
                             "src.SFWInteractions",
                             "src.Music.MusicFunctions"
                             ]
-    
+
     async def on_ready(self):
         await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
         print("Jui co")
-        await setup()
-        
+
     async def on_message(self, message):
-        if not message.guild and message.author != client.user:
-            message.content = "p!process_download " + message.content
-            await client.process_commands(message)
-        else:
-            for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
-                await func(client, message)
-            await client.process_commands(message)
+        for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
+            await func(client, message)
+        await client.process_commands(message)
 
     async def setup_hook(self):
         for cog in self.cogs_to_quire:

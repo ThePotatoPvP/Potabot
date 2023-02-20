@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from ..Exceptions import MusicalError
-from SongPlayer import SongPlayer, song_to_str
+from src.Exceptions import MusicalError
+from src.Music.SongPlayer import SongPlayer, song_to_str
 
 import discord
 from discord.ext import commands
@@ -67,10 +67,6 @@ def duration_detector(length):
     
     return f"{hours}h {mins}m {seconds}s"
 
-def song_to_str(song):
-    if type(song) is str: return song[:-4]
-    return song[1]
-
 async def update_annonce(client):
     musiks = os.listdir("Musica/Review")
     monstr = ""
@@ -95,15 +91,21 @@ def gotoreview():
     for i in r:
         os.rename(f'./ressources/Musica/Update/{r}',f'./ressources/Musica/Review/{r}')
 
-def make_embed(tab: list, counter: int) -> discord.Embed:
+def make_embed(sg: SongPlayer) -> discord.Embed:
+    tab = sg.songs
+    counter = sg.counter
     embed = discord.Embed(title="Currently playing",
                           colour=0xFFc4d5,
                           description="")
     SongDisplaying = str('```ansi\n')
-    for song in [tab[i % len(tab)]for i in range(counter - 1, counter + 20)]:
-      SongDisplaying += (song == tab[counter]) * "[0;31m" + song_to_str(song).split("(")[0].split(
-        '[')[0] + '\n' + (song == tab[counter]) * "[0m"
+    for song in [sg.songs[i % len(sg.songs)]for i in range(sg.counter - 1, sg.counter + 20)]:
+      SongDisplaying += (song == sg.songs[sg.counter]) * "[0;31m" + song_to_str(song).split("(")[0].split(
+        '[')[0] + '\n' + (song == sg.songs[sg.counter]) * "[0m"
     embed.add_field(name="", value=SongDisplaying + '```', inline=True)
+    if sg.loop:
+        embed.set_footer(text="The current song is on loop.")
+    elif sg.loopqueue:
+        embed.set_footer(text="The current playlist is on loop.")
     return embed
 
 ###
@@ -212,7 +214,6 @@ class MusicFunctions(commands.Cog):
             else:       
                 songs = match
         else: songs = musicas
-        print(songs)
         if self.musicPlayers.get(ctx.guild,False):
             self.musicPlayers[ctx.guild].add_songs(songs)
         else: 
@@ -223,7 +224,7 @@ class MusicFunctions(commands.Cog):
     brief='Shows the next songs to be played', display_name="queue")
     async def queue(self, ctx, *, bullshit=None):
         if self.musicPlayers.get(ctx.guild,False):
-            self.message = await ctx.send(embed=make_embed(self.musicPlayers[ctx.guild].songs, self.musicPlayers[ctx.guild].counter), view=PlayerButtons(self.musicPlayers[ctx.guild], ctx, self))
+            self.message = await ctx.send(embed=make_embed(self.musicPlayers[ctx.guild]))
 
     @commands.command(aliases=['search'], brief='Searches for a song in the databse', display_name="search")
     async def query(self, ctx, *, query=''):
@@ -267,6 +268,16 @@ class MusicFunctions(commands.Cog):
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].skip()
             else: raise MusicalError("`skip`")
+        except MusicalError as e:
+            await ctx.send(e.message)
+
+    @commands.command(aliases=['pr','prev'],
+    brief='PLays the previous song', display_name="previous")
+    async def previous(self, ctx): 
+        try:
+            if self.musicPlayers.get(ctx.guild,False):
+                self.musicPlayers[ctx.guild].previous()
+            else: raise MusicalError("`previous`")
         except MusicalError as e:
             await ctx.send(e.message)
 

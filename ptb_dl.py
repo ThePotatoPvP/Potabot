@@ -44,7 +44,7 @@ current_folder = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 
 
-intents = discord.Intents().default()
+intents = discord.Intents().all()
 intents.members = True
 
 client  = commands.Bot(command_prefix = "P!", help_command=None, intents = intents)
