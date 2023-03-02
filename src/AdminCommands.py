@@ -29,7 +29,7 @@ class AdminCommands(commands.Cog):
         else:
             await self.client.change_presence(status=discord.Status.online, activity=discord.Game(kk))
         await ctx.message.delete()
-
+        
     @commands.command(hidden=True)
     @commands.is_owner()
     async def serverslist(self, ctx):

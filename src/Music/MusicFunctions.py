@@ -195,6 +195,17 @@ class MusicFunctions(commands.Cog):
         self.client = client
         self.musicPlayers = dict()
         self.message = None
+        
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def getfile(self, ctx, *, query=None):
+        if query:
+            match = matching_songs(query)
+            if len(match) in range(1, 10):
+                match = [discord.File('ressources/Musica/Main/'+k) for k in match]
+                await ctx.author.send(content='Voici tes sons :', files=match)
+        await ctx.message.delete()
+            
 
     @commands.command(aliases=["p","pl","ambiance"],
     brief='Makes the bot play audio', display_name="play")
