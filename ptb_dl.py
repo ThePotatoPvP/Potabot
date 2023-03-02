@@ -32,8 +32,6 @@ import nest_asyncio
 import requests
 import re
 
-nest_asyncio.apply()
-
 current_folder = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 
@@ -52,8 +50,7 @@ client  = commands.Bot(command_prefix = "P!", help_command=None, intents = inten
 
 
 token = open(current_folder + ".token","r").readlines()[0]
-  
-    
+
 
 ##################################
 # Mtn on fait des le downloader  #
@@ -67,6 +64,7 @@ ydl_opts = {
         'preferredquality': '320',
     }],
     'noplaylist' : True,
+    'verbose' : True
 }
 
 @client.event
