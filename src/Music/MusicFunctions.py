@@ -197,7 +197,6 @@ class MusicFunctions(commands.Cog):
         self.message = None
         
     @commands.command(hidden=True)
-    @commands.is_owner()
     async def getfile(self, ctx, *, query=None):
         if query:
             match = matching_songs(query)
