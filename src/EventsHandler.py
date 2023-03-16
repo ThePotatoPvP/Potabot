@@ -14,7 +14,7 @@ async def wednesday_event(client : discord.Client, message : discord.Message):
         channel = client.get_channel(717298046144217099)
         await channel.send('https://i.kym-cdn.com/photos/images/newsfeed/001/091/264/665.jpg')
         already_sent_wednesday = True
-    elif re.match(r'.*(mercredi|wednesday).*', message.content.lower()):
+    elif re.match(r'.*(mercredi|wednesday).*', message.content.lower()) and message.author.id != client.user.id:
         await message.channel.send('Fake news ! Nous ne sommes aucunement mercredi !')
     elif message.created_at.weekday() != 2:
         already_sent_wednesday = False
