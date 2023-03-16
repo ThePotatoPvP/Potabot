@@ -7,6 +7,7 @@ import re, asyncio
 
 already_sent_wednesday = False
 
+# All events shall have the same type
 
 async def wednesday_event(client : discord.Client, message : discord.Message):
     global already_sent_wednesday
