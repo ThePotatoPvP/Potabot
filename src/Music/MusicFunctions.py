@@ -250,8 +250,6 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['calc'],brief='Does the maths for the length of the playlist', display_name="calc")
     async def calculus(self, ctx, tab=musicas):
-        #if self.musicPlayers.get(ctx.guild,False):
-        #    tab = self.musicPlayers[ctx.guild].songs
         totalsec = 0
         old_percent = 0
         failed = list()
