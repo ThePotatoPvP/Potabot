@@ -4,7 +4,8 @@ from discord.ext import commands
 import os
 import inspect
 
-import src.EventsHandler
+import src.Events.ReactionEvents
+import src.Events.ScheduledEvents
 
 from src.Music.MusicFunctions import MusicFunctions
 #from src.Music.Downloader import SongDownloader
@@ -70,10 +71,12 @@ class Potabot(commands.Bot):
 
     async def on_ready(self):
         await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
+        for name, func in inspect.getmembers(src.Events.ScheduledEvents, inspect.isfunction):
+            await func.start(client)
         print("Jui co")
 
     async def on_message(self, message):
-        for name, func in inspect.getmembers(src.EventsHandler, inspect.isfunction):
+        for name, func in inspect.getmembers(src.Events.ReactionEvents, inspect.isfunction):
             await func(client, message)
         await client.process_commands(message)
 
