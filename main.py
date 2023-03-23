@@ -67,11 +67,11 @@ class Potabot(commands.Bot):
                             #"src.AdminCommands",
                             #"src.SFWInteractions",
                             #"src.Music.MusicFunctions",
+                            "src.Events.ScheduledEvents"
                             ]
 
     async def on_ready(self):
         await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
-        await src.Events.ScheduledEvents.ScheduledEvents(client).__start_loops__()
         print("Jui co")
 
     async def on_message(self, message):
