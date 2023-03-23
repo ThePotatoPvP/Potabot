@@ -6,28 +6,15 @@ from discord.ext import tasks, commands
 import datetime
 import asyncio
 
-class ScheduledEvents(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+from decorators import ScheduledEvent
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        self.nineteenth.start()
-        self.wednesday.start()
+@ScheduledEvent(day_of_month=19)
+async def funny_cat(client: discord.Client):
+    channel = client.get_channel(821754215540981820)
+    await channel.send("https://media.discordapp.net/attachments/763535317360705606/1076848517143859291/ssstik.io_1676808935083.mp4")
 
-    @tasks.loop(hours=24.0)
-    async def nineteenth(self):
-        date = datetime.datetime.now()
-        if date.day == 19:
-            channel = self.bot.get_channel(821754215540981820)
-            await channel.send("https://media.discordapp.net/attachments/763535317360705606/1076848517143859291/ssstik.io_1676808935083.mp4")
 
-    @tasks.loop(hours=24.0)
-    async def wednesday(self):
-        date = datetime.datetime.now()
-        if date.weekday() == 2:
-            channel = self.bot.get_channel(717298046144217099)
-            await channel.send("https://i.kym-cdn.com/photos/images/newsfeed/001/091/264/665.jpg")
-
-async def setup(bot: commands.Bot):
-    await bot.add_cog(ScheduledEvents(bot))
+@ScheduledEvent(day_of_week=2)
+async def wednesday(client: discord.Client):
+    channel = client.get_channel(717298046144217099)
+    await channel.send("https://i.kym-cdn.com/photos/images/newsfeed/001/091/264/665.jpg")

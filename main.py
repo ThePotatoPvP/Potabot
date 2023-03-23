@@ -7,7 +7,7 @@ import inspect
 import src.Events.ReactionEvents
 import src.Events.ScheduledEvents
 
-#from src.Music.MusicFunctions import MusicFunctions
+from src.Music.MusicFunctions import MusicFunctions
 #from src.Music.Downloader import SongDownloader
 
 #Potato#8999
@@ -28,8 +28,6 @@ intents = discord.Intents().all()
 intents.members = True
 
 client  = commands.Bot(command_prefix = "p!", help_command=None, intents = intents)
-
-
 
 ###
 #   Events
@@ -72,7 +70,9 @@ class Potabot(commands.Bot):
 
     async def on_ready(self):
         await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
-        print("Jui co")
+        for name, func in inspect.getmembers(src.Events.ScheduledEvents, inspect.isfunction):
+            await func(client, message)
+        print("Potabot is online !")
 
     async def on_message(self, message):
         for name, func in inspect.getmembers(src.Events.ReactionEvents, inspect.isfunction):
