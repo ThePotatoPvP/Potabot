@@ -3,6 +3,9 @@ import discord
 from discord.ext import commands
 import os
 import inspect
+import asyncio
+import importlib
+from concurrent.futures import ThreadPoolExecutor
 
 import src.Events.ReactionEvents
 import src.Events.ScheduledEvents
@@ -16,7 +19,8 @@ from src.Music.MusicFunctions import MusicFunctions
 
 current_folder = os.path.dirname(os.path.abspath(__file__)) + "/"
 
-
+import pytz
+tz = pytz.timezone('Europe/Paris')
 
 ################################
 # On met le prefixe de la joie #
@@ -64,14 +68,11 @@ class Potabot(commands.Bot):
         self.cogs_to_quire = ["src.Help",
                             "src.AdminCommands",
                             "src.SFWInteractions",
-                            "src.Music.MusicFunctions",
-                            "src.Events.ScheduledEvents"
+                            "src.Music.MusicFunctions"
                             ]
 
     async def on_ready(self):
         await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
-        for name, func in inspect.getmembers(src.Events.ScheduledEvents, inspect.isfunction):
-            await func(client, message)
         print("Potabot is online !")
 
     async def on_message(self, message):
@@ -88,4 +89,21 @@ class Potabot(commands.Bot):
 if __name__ == '__main__':
     client = Potabot()
     token = open('.token','r').read()
+    
+    def run_scheduled_events():
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        executor = ThreadPoolExecutor(max_workers=1)
+        module = importlib.import_module(module_name)
+
+        for name, func in inspect.getmembers(module, inspect.isfunction):
+            if hasattr(func, "__wrapped__"):
+                task = asyncio.run_coroutine_threadsafe(func(client), loop=loop)
+                task.add_done_callback(lambda x: x.result())
+
+        loop.run_forever()
+
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        executor.submit(run_scheduled_events)
+    
     client.run(token)
