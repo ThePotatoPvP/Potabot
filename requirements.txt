@@ -4,3 +4,4 @@ discord
 datetime
 tinytag
 yt_dlp
+pytz
