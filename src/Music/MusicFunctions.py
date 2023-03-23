@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 from tinytag import TinyTag
 
-import youtube_dl
+import yt_dlp as youtube_dl
 import os, re 
 import asyncio
 import random

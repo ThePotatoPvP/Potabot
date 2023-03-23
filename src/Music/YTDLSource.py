@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import youtube_dl
+import yt_dlp as youtube_dl
 import discord
 import asyncio
 

@@ -7,7 +7,7 @@ import inspect
 import src.Events.ReactionEvents
 import src.Events.ScheduledEvents
 
-from src.Music.MusicFunctions import MusicFunctions
+#from src.Music.MusicFunctions import MusicFunctions
 #from src.Music.Downloader import SongDownloader
 
 #Potato#8999
@@ -62,17 +62,16 @@ async def reload(ctx):
 
 class Potabot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix="p!",help_command=None,intents=intents,application_id=694246129906483311)
-        self.cogs_to_quire = ["src.Help",
-                            "src.AdminCommands",
-                            "src.SFWInteractions",
-                            "src.Music.MusicFunctions"
+        super().__init__(command_prefix="p!",help_command=None,intents=intents,)
+        self.cogs_to_quire = [#"src.Help",
+                            #"src.AdminCommands",
+                            #"src.SFWInteractions",
+                            #"src.Music.MusicFunctions",
                             ]
 
     async def on_ready(self):
         await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
-        for name, func in inspect.getmembers(src.Events.ScheduledEvents, inspect.isfunction):
-            await func.start(client)
+        await src.Events.ScheduledEvents.ScheduledEvents(client).__start_loops__()
         print("Jui co")
 
     async def on_message(self, message):
