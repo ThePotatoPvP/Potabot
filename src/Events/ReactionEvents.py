@@ -7,7 +7,7 @@ import re, asyncio
 
 
 async def wednesday_event(client : discord.Client, message : discord.Message):
-    if message.author!=client.user and message.created_at.weekday() == 2 and re.match(r'.*(mercredi|wednesday).*', message.content.lower()):
+    if message.author!=client.user and message.created_at.weekday() != 2 and re.match(r'.*(mercredi|wednesday).*', message.content.lower()):
         await message.channel.send('Fake news ! Nous ne sommes aucunement mercredi !')
 
 async def latex_event(client : discord.Client, message : discord.Message):
