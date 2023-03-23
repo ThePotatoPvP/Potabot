@@ -77,7 +77,7 @@ class Potabot(commands.Bot):
     @client.event
     async def on_command_error(ctx, error):
         cmd = ctx.command
-        if isinstance(error, (commands.MissingRequiredArgument, commands.BadArgument)): 
+        if isinstance(error, (commands.MissingRequiredArgument, commands.BadArgument)):
             example = f"{ctx.prefix}{cmd.name} {cmd.signature.replace('[bullshit]','')}"
             await ctx.reply(f'Proper way to use {cmd.name} is {example}', delete_after=30)
         elif isinstance(error, commands.CommandNotFound):
@@ -89,7 +89,7 @@ class Potabot(commands.Bot):
 if __name__ == '__main__':
     client = Potabot()
     token = open('.token','r').read()
-    
+
     def run_scheduled_events():
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -105,5 +105,5 @@ if __name__ == '__main__':
 
     with ThreadPoolExecutor(max_workers=1) as executor:
         executor.submit(run_scheduled_events)
-    
+
     client.run(token)

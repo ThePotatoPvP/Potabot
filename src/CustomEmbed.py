@@ -7,10 +7,10 @@ class CustomEmbed():
     def __init__(self, ctx, desc=None, title=None, footer=None,color=0xffd1f3, image=None, author=None):
         self.ctx = ctx
         self.desc = desc
-        self.title = title 
-        self.footer = footer 
-        self.color = color 
-        self.image = image 
+        self.title = title
+        self.footer = footer
+        self.color = color
+        self.image = image
         self.author = author
 
     def make(self)->list:

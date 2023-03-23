@@ -66,7 +66,7 @@ def duration_detector(length):
     length %= 60
     seconds = length
     seconds = int(seconds) + 1
-    
+
     return f"{hours}h {mins}m {seconds}s"
 
 async def update_annonce(client):
@@ -122,7 +122,7 @@ class MusicFunctions(commands.Cog):
         self.client = client
         self.musicPlayers = dict()
         self.message = None
-        
+
     @commands.command(hidden=True)
     async def getfile(self, ctx, *, query=None):
         if query:
@@ -131,7 +131,6 @@ class MusicFunctions(commands.Cog):
                 match = [discord.File('ressources/Musica/Main/'+k) for k in match]
                 await ctx.author.send(content='Voici tes sons :', files=match)
         await ctx.message.delete()
-            
 
     @commands.command(aliases=["p","pl","ambiance"],
     brief='Makes the bot play audio', display_name="play")
@@ -146,16 +145,16 @@ class MusicFunctions(commands.Cog):
                         songs = [(url_from_id(result['entries'][i]['id']),result['entries'][i]['title']) for i in range(len(result['entries']))]
                     except:
                         songs = [(query,result['title'])]
-            else:       
+            else:
                 songs = match
         else: songs = musicas
         if self.musicPlayers.get(ctx.guild,False):
             self.musicPlayers[ctx.guild].add_songs(songs)
-        else: 
+        else:
             self.musicPlayers[ctx.guild] = SongPlayer(self.musicPlayers, ctx, ctx.guild, songs, self.client, 'casu')
             await self.musicPlayers[ctx.guild].play()
 
-    @commands.hybrid_command(aliases=["q","print"], 
+    @commands.hybrid_command(aliases=["q","print"],
     brief='Shows the next songs to be played', display_name="queue")
     async def queue(self, ctx, *, bullshit=None):
         if self.musicPlayers.get(ctx.guild,False):
@@ -188,7 +187,7 @@ class MusicFunctions(commands.Cog):
                         await advancement.edit(content = show_progress(100 * n/len(tab)))
                         old_percent = 100 * n/len(tab)
                     assert tag.duration != 0
-                except: 
+                except:
                     failed.append(tab[n])
             await advancement.edit(content = f"Calcul terminé, ça fait {duration_detector(totalsec)} en {len(tab)} musiques.")
         except:
@@ -263,7 +262,7 @@ class MusicFunctions(commands.Cog):
         else:
             await self._play(ctx=ctx, query=query)
 
-    @commands.command(aliases=['ps','pskip'], 
+    @commands.command(aliases=['ps','pskip'],
     brief='Skips the current song to play the requested one', display_name="playskip")
     async def playskip(self, ctx, *, query=None):
         if self.musicPlayers.get(ctx.guild, False):

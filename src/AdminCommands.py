@@ -7,7 +7,7 @@ class AdminCommands(commands.Cog):
         self.client = client
 
     @commands.command(hidden=True)
-    @commands.has_permissions(kick_members=True) 
+    @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member : discord.Member,*, reason = "surplus de wati-bizarrerie"):
         """Permet de kick qlqun"""
         await member.send("Yo la frappe \n Tu t'es fait **kick** du wati-serv pour : "+reason +"\n \n CHEH :woman_in_manual_wheelchair:")
@@ -29,7 +29,7 @@ class AdminCommands(commands.Cog):
         else:
             await self.client.change_presence(status=discord.Status.online, activity=discord.Game(kk))
         await ctx.message.delete()
-        
+
     @commands.command(hidden=True)
     @commands.is_owner()
     async def serverslist(self, ctx):
