@@ -7,11 +7,15 @@ import random
 
 class sfw_init():
     def __init__(self):
-        self.punchlines = open("./ressources/SFW_Interactions/punchlines.txt","r").readlines()
-        self.disquettes = open("./ressources/SFW_Interactions/disquettes.txt","r").readlines()
-        self.emotes = open("./ressources/SFW_Interactions/emotes.txt","r").readlines()
-        self.eight_b = open("./ressources/SFW_Interactions/eight_b.txt","r").readlines()
-        self.images = open("./ressources/SFW_Interactions/images.txt","r").readlines()
+        try:
+            self.punchlines = open("./ressources/SFW_Interactions/punchlines.txt","r").readlines()
+            self.disquettes = open("./ressources/SFW_Interactions/disquettes.txt","r").readlines()
+            self.emotes = open("./ressources/SFW_Interactions/emotes.txt","r").readlines()
+            self.eight_b = open("./ressources/SFW_Interactions/eight_b.txt","r").readlines()
+            self.images = open("./ressources/SFW_Interactions/images.txt","r").readlines()
+        except FileNotFoundError:
+            self.punchlines, self.disquettes, self.emotes = [], [], []
+            self.eight_b, self.images = [], []
 
 class SFWInteractions(commands.Cog):
     def __init__(self, client):
