@@ -1,0 +1,6 @@
+pynacl
+asyncio
+discord
+datetime
+tinytag
+yt_dlp

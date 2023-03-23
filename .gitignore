@@ -5,8 +5,8 @@
 *__pycache__
 *.m4a
 *.mp3
-*.txt
 
+*/*.txt
 rules.json
 sample.json
 
