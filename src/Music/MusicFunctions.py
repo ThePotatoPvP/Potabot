@@ -29,8 +29,10 @@ ydl_opts = {
 }
 
 
-
-musicas = os.listdir('./ressources/Musica/Main')
+try:
+    musicas = os.listdir('./ressources/Musica/Main')
+except FileNotFoundError:
+    musicas = []
 
 
 
@@ -98,7 +100,7 @@ def make_embed(sg: SongPlayer) -> discord.Embed:
                           colour=0xFFc4d5,
                           description="")
     SongDisplaying = str('```ansi\n')
-    for song in [sg.songs[i % len(sg.songs)]for i in range(sg.counter - 1, min(sg.counter + 20, len(sg.songs)-sg.counter))]:
+    for song in [sg.songs[i % len(sg.songs)]for i in range(sg.counter - 1, min(sg.counter + 20, len(sg.songs)-sg.counter-1))]:
       SongDisplaying += (song == sg.songs[sg.counter]) * "[0;31m" + song_to_str(song).split("(")[0].split(
         '[')[0] + '\n' + (song == sg.songs[sg.counter]) * "[0m"
     embed.add_field(name="", value=SongDisplaying + '```', inline=True)
