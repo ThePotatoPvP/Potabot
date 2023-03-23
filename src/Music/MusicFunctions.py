@@ -98,7 +98,7 @@ def make_embed(sg: SongPlayer) -> discord.Embed:
                           colour=0xFFc4d5,
                           description="")
     SongDisplaying = str('```ansi\n')
-    for song in [sg.songs[i % len(sg.songs)]for i in range(sg.counter - 1, sg.counter + 20)]:
+    for song in [sg.songs[i % len(sg.songs)]for i in range(sg.counter - 1, min(sg.counter + 20, len(sg.songs)-sg.counter))]:
       SongDisplaying += (song == sg.songs[sg.counter]) * "[0;31m" + song_to_str(song).split("(")[0].split(
         '[')[0] + '\n' + (song == sg.songs[sg.counter]) * "[0m"
     embed.add_field(name="", value=SongDisplaying + '```', inline=True)
@@ -107,81 +107,6 @@ def make_embed(sg: SongPlayer) -> discord.Embed:
     elif sg.loopqueue:
         embed.set_footer(text="The current playlist is on loop.")
     return embed
-
-###
-#   Player Class
-###
-
-
-
-class PlayerEmbed(discord.Embed):
-    def __init__(self, player: SongPlayer, msg: discord.InteractionMessage):
-        self.player = player 
-        self.color = 0xffc4d5
-        self.msg = msg
-        self.set_author(name=f"{self.player.bot.user.display_name}'s playlist", icon_url=self.player.bot.user.display_avatar.url)
-
-    def update_desc(self) -> None:
-        """Updates the description to match the current song playing"""
-        desc: str = "```ansi\n"
-        for song in [self.player.songs[i % len(self.player.songs)]for i in range(self.player.counter - 1, self.player.counter + 20)]:
-            desc += (song == self.player.songs[self.player.counter]) * "[0;31m" + song_to_str(song).split("(")[0].split('[')[0] \
-                 + '\n' + (song == self.player.songs[self.player.counter]) * "[0m"
-        self.description = desc
-
-    def update_footer(self) -> None:
-        if self.player.loop:
-            self.set_footer(text="The current song is on loop.")
-        elif self.player.loopqueue:
-            self.set_footer(text="The current playlist is on loop.")
-        else:
-            self.remove_footer()
-
-    def _update(self) -> None:
-        if self.player.songs_left:
-            self.update_desc()
-            self.update_footer()
-            self.needButtons = True
-        else:
-            self.description = "Finished playing for now."
-            self.remove_footer()
-            self.needButtons = False
-
-
-    async def update(self) -> None:
-        self._update()
-        await self.msg.edit(embed=self, view = PlayerButtons(self.player, em) if self.needButtons else None)
-
-    
-
-class PlayerButtons(discord.ui.View):
-    def __init__(self, em: PlayerEmbed):
-        super().__init__(timeout=None)
-        self.embed = em
-    
-    @discord.ui.button(label="<", style=discord.ButtonStyle.blurple, custom_id="previous_song")
-    async def _previous(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        self.embed.player.previous()
-        await self.embed.update()
-        await interaction.response.defer()
-
-    @discord.ui.button(label=">", style=discord.ButtonStyle.blurple, custom_id="next_song")
-    async def _skip(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        self.embed.player.skip()
-        await self.embed.update()
-        await interaction.response.defer()
-
-    @discord.ui.button(label="Loop", style=discord.ButtonStyle.blurple, custom_id="loop")
-    async def _loop(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.embed.player.goloop()
-        await interaction.response.defer()
-
-    @discord.ui.button(label="Loop queue", style=discord.ButtonStyle.blurple, custom_id="loopqueue")
-    async def _loop(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.embed.player.goloopqueue()
-        await interaction.response.defer()
-
-
 
 
 ###
@@ -215,8 +140,6 @@ class MusicFunctions(commands.Cog):
                 songs = list()
                 with youtube_dl.YoutubeDL(ydl_opts) as yold:
                     result = yold.extract_info(query, download=False)
-                    with open('sample.json','w') as f:
-                            json.dump(result, f)
                     try:
                         songs = [(url_from_id(result['entries'][i]['id']),result['entries'][i]['title']) for i in range(len(result['entries']))]
                     except:
@@ -280,7 +203,7 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['pr','prev'],
-    brief='PLays the previous song', display_name="previous")
+    brief='Plays the previous song', display_name="previous")
     async def previous(self, ctx): 
         try:
             if self.musicPlayers.get(ctx.guild,False):

@@ -63,10 +63,10 @@ async def reload(ctx):
 class Potabot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix="p!",help_command=None,intents=intents,)
-        self.cogs_to_quire = [#"src.Help",
-                            #"src.AdminCommands",
-                            #"src.SFWInteractions",
-                            #"src.Music.MusicFunctions",
+        self.cogs_to_quire = ["src.Help",
+                            "src.AdminCommands",
+                            "src.SFWInteractions",
+                            "src.Music.MusicFunctions",
                             "src.Events.ScheduledEvents"
                             ]
 

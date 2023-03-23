@@ -126,7 +126,6 @@ class SongPlayer():
             self.songs[self.counter+1] = (await getVidFromLink(self.songs[self.counter+1][0]), self.songs[self.counter+1][1])
 
     async def play(self):
-        # grab the user who sent the command
         user=self.ctx.author
         self.voice_channel=user.voice.channel
 
