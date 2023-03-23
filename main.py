@@ -39,23 +39,6 @@ client  = commands.Bot(command_prefix = "p!", help_command=None, intents = inten
 
 
 
-@client.event
-async def on_member_join(member):
-    if "wati" in str(member.guild).lower():
-        role = discord.utils.get(member.guild.roles, id = 466166843132870667)
-        await member.add_roles(role)
-
-@client.event
-async def on_command_error(ctx, error):
-    cmd = ctx.command
-    if isinstance(error, (commands.MissingRequiredArgument, commands.BadArgument)): 
-        example = f"{ctx.prefix}{cmd.name} {cmd.signature.replace('[bullshit]','')}"
-        await ctx.reply(f'Proper way to use {cmd.name} is {example}', delete_after=30)
-    elif isinstance(error, commands.CommandNotFound):
-        print(f'Failed on {ctx.message.content}')
-    else:
-        print(f'Error occured on {ctx.message.content} : \n {error}')
-
 @client.command()
 async def reload(ctx):
     for cog in client.cogs():
@@ -84,6 +67,23 @@ class Potabot(commands.Bot):
         for cog in self.cogs_to_quire:
             await self.load_extension(cog)
         await client.tree.sync()
+
+    @client.event
+    async def on_member_join(member):
+        if "wati" in str(member.guild).lower():
+            role = discord.utils.get(member.guild.roles, id = 466166843132870667)
+            await member.add_roles(role)
+
+    @client.event
+    async def on_command_error(ctx, error):
+        cmd = ctx.command
+        if isinstance(error, (commands.MissingRequiredArgument, commands.BadArgument)): 
+            example = f"{ctx.prefix}{cmd.name} {cmd.signature.replace('[bullshit]','')}"
+            await ctx.reply(f'Proper way to use {cmd.name} is {example}', delete_after=30)
+        elif isinstance(error, commands.CommandNotFound):
+            print(f'Failed on {ctx.message.content}')
+        else:
+            print(f'Error occured on {ctx.message.content} : \n {error}')
 
 
 if __name__ == '__main__':
