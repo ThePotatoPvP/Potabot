@@ -56,6 +56,7 @@ class Potabot(commands.Bot):
 
     async def on_ready(self):
         await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = "p!help"))
+        asyncio.create_task(scheduled_events_loop(client))
         print("Potabot is online !")
 
     async def on_message(self, message):
@@ -85,25 +86,14 @@ class Potabot(commands.Bot):
         else:
             print(f'Error occured on {ctx.message.content} : \n {error}')
 
+async def scheduled_events_loop(client: discord.Client):
+    # Call the wrapped function of each ScheduledEvent decorator at the scheduled time
+    while True:
+        for name, func in inspect.getmembers(src.Events.ScheduledEvents, inspect.iscoroutinefunction):       
+            await func(client)
 
 if __name__ == '__main__':
     client = Potabot()
     token = open('.token','r').read()
-
-    def run_scheduled_events():
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        executor = ThreadPoolExecutor(max_workers=1)
-        module = importlib.import_module(module_name)
-
-        for name, func in inspect.getmembers(module, inspect.isfunction):
-            if hasattr(func, "__wrapped__"):
-                task = asyncio.run_coroutine_threadsafe(func(client), loop=loop)
-                task.add_done_callback(lambda x: x.result())
-
-        loop.run_forever()
-
-    with ThreadPoolExecutor(max_workers=1) as executor:
-        executor.submit(run_scheduled_events)
 
     client.run(token)
