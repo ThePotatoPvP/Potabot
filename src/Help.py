@@ -9,7 +9,7 @@ def _help_embed_maker(client: discord.Client, entree: str = 'base') -> discord.E
             cmd_lst = ''
             for command in client.get_cog(cog).get_commands():
                 if not command.hidden:
-                    cmd_lst += f'`{command.name[1:]}` | {command.brief}\n'
+                    cmd_lst += f'`{command.name}` | {command.brief}\n'
             if not 'admin' in cog.lower() and not 'songd' in cog.lower():
                 embed.add_field(name=f"​", value=cmd_lst[:-1],inline=False)
         embed.set_author(name=f"{client.user.display_name}'s help page",
