@@ -3,5 +3,5 @@ asyncio
 discord
 datetime
 tinytag
-yt_dlp
+yt-dlp
 pytz
