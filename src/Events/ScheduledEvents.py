@@ -8,6 +8,15 @@ import asyncio
 
 from src.Events.decorators import ScheduledEvent
 
+'''
+
+This file should only countain ScheduledEvents functions formatted as the following :
+@ScheduledEvent()
+async def <func-name>(client : discord.Client):
+    ...
+
+'''
+
 @ScheduledEvent(day_of_month=19)
 async def funny_cat(client: discord.Client):
     channel = client.get_channel(821754215540981820)
@@ -19,8 +28,7 @@ async def wednesday(client: discord.Client):
     channel = client.get_channel(717298046144217099)
     await channel.send("https://i.kym-cdn.com/photos/images/newsfeed/001/091/264/665.jpg")
 
-@ScheduledEvent(hour=16, minute=53)
+@ScheduledEvent(hour=19, minute=00)
 async def foo(client: discord.Client):
-    print('ayou le event')
     channel = client.get_channel(822927544948359228)
     await channel.send('foo')
