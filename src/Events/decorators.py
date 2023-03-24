@@ -1,10 +1,3 @@
-import datetime
-import asyncio
-import functools
-
-import asyncio
-import functools
-import datetime
 import pytz
 tz = pytz.timezone('Europe/Paris')
 
