@@ -213,7 +213,7 @@ class MusicFunctions(commands.Cog):
         except MusicalError as e:
             await ctx.send(e.message)
 
-    @commands.command(aliases=['d','dco','disconnect'],
+    @commands.command(aliases=['d','dco','disconnect', 'stop'],
     brief='Disconnects the bot from voice channel', display_name="deco")
     async def deco(self, ctx): 
         try:
