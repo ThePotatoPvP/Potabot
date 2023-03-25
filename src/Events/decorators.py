@@ -1,28 +1,27 @@
-import sched
-import time
+import pytz
+tz = pytz.timezone('Europe/Paris')
 
-scheduler = sched.scheduler(time.time, time.sleep)
+import functools
+import asyncio
+import datetime
+import discord
 
-def ScheduledEvent(*, hour=0, minute=0, day_of_week=None, day_of_month=None):
+def ScheduledEvent(hour: int = 0, minute: int = 0, day_of_week: int = None, day_of_month: int = None):
     def decorator(func):
-        def wrapper(*args, **kwargs):
-            # Check if the event should run today based on the specified schedule
-            now = datetime.datetime.now()
-            if day_of_week is not None and now.weekday() != day_of_week:
-                return
-            if day_of_month is not None and now.day != day_of_month:
-                return
-            
-            # Schedule the event to run at the specified time
-            event_time = datetime.datetime(now.year, now.month, now.day, hour, minute)
-            if event_time < now:
-                event_time += datetime.timedelta(days=1)
-            delay = (event_time - now).total_seconds()
-            scheduler.enter(delay, 1, func, args, kwargs)
-
-        # Schedule the event to run immediately on startup, then schedule it daily
-        wrapper()
-        scheduler.enterabs(time.time() + 86400, 1, wrapper)
-
+        @functools.wraps(func)
+        async def wrapper(client: discord.Client):
+            while True:
+                now = datetime.datetime.now(tz)
+                scheduled_time = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+                if day_of_week is not None:
+                    scheduled_time += datetime.timedelta(days=(day_of_week - scheduled_time.weekday()) % 7)
+                elif day_of_month is not None:
+                    scheduled_time += datetime.timedelta(days=(day_of_month - scheduled_time.day) % 30)
+                time_to_wait = (scheduled_time - now).total_seconds()
+                if time_to_wait < 0:
+                    scheduled_time += datetime.timedelta(days=1)
+                    time_to_wait = (scheduled_time - now).total_seconds()
+                await asyncio.sleep(time_to_wait)
+                await func(client)
         return wrapper
     return decorator

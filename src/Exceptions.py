@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import discord 
-from discord.ext import commands 
+import discord
+from discord.ext import commands
 
 class MusicalError(Exception):
     def __init__(self, command:str):

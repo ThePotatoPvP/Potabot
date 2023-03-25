@@ -74,6 +74,6 @@ class SFWInteractions(commands.Cog):
             await target.send(text)
             await ctx.message.delete()
         except: pass
-        
+
 async def setup(bot: commands.Bot):
     await bot.add_cog(SFWInteractions(bot))

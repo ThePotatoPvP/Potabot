@@ -58,4 +58,3 @@ class SongDownloader(commands.Cog):
                             except: raise NotDownloadable(media=attachment.filename, media_type='file')
                         except NotDownloadable as e:
                             await ctx.send(e.message)
-                        

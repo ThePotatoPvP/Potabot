@@ -23,6 +23,19 @@ To run PotaBot on your own server, follow these steps:
 3. Create a `.token` file and put your Discord bot token in it.
 4. Run `python main.py` to start the bot.
 
+## Events
+
+This bot was also made to allow for easy creation of custom events, for now the only that is implemented properly is `ScheduledEvents` which are events that happen based on a schedule. By default the events will happen every day at midnight but you're able to change the time, to set a special day of the week or even of the month. The following example will send a message to a given channel every monday at 7pm.
+
+```python
+@ScheduledEvent(hour=19, minute=0, day_of_week=0)
+async def foo(client: discord.Client):
+    channel = client.get_channel('channel-id')
+    await channel.send('foo')
+```
+
+To allow for simple usage, all of those events shall be typed the same as this example and be in [`ScheduledEvents`](src/Events/ScheduledEvents.py)
+
 ## Advanced
 
 PotaBot has a unique playlist feature that allows anyone to suggest a song by sending a link or audio file to the bot in a DM. The bot will then download the audio file and store it in the `Musica/` directory. However, moderators of the server have to review the proposed songs before they can be added to the playlist.

@@ -16,14 +16,14 @@ def song_to_str(song) -> str:
 
 class SongPlayer():
     """Creates an instance of the bot to play music in a voice channel
-    
+
         3 possible modes, the names are rather intuitives so I  won't explain
         -casu
         -review
         -focus
         """
     def __init__(self, musicPlayers: dict, context: discord.ext.commands.Context, guild: discord.Guild, songs: list[str|tuple], client: discord.Client, mode: str = "casu"):
-        self.guild = guild 
+        self.guild = guild
         self.add_songs(songs)
         self.ctx = context
         self.bot = client
@@ -34,7 +34,7 @@ class SongPlayer():
 
     @property
     def songs_left(self):return len(self.songs)-self.counter
-    
+
     def add_songs(self, songs : list) -> None:
         try:
             self.songs += songs
@@ -63,7 +63,7 @@ class SongPlayer():
     def previous(self) -> None:
         self.counter -= 2
         self.skip()
-        
+
     def goloop(self) -> None:
         self.loop = not self.loop
         self.loopqueue = False
@@ -95,7 +95,7 @@ class SongPlayer():
     async def deco(self) -> None:
         self.loop = False
         self.loopqueue = False
-        
+
         try:
             self.player.stop()
             await self.ctx.voice_client.disconnect()
@@ -111,13 +111,13 @@ class SongPlayer():
         # Make first song clean if from youtube and not ready yet
         if type(self.songs[self.counter]) is tuple and type(self.songs[self.counter][0]) is str:
             self.songs[self.counter] = (await getVidFromLink(self.songs[self.counter][0]),self.songs[self.counter][1])
-                    
+
         # Make song readable
         if type(self.songs[self.counter]) is str:
             if self.mode == 'review': media = './ressources/Musica/Review/' + self.songs[self.counter]
             else: media = './ressources/Musica/Main/' + self.songs[self.counter]
             self.media = discord.FFmpegPCMAudio(media)
-        else:        
+        else:
             self.media = self.songs[self.counter][0]
         self.title = song_to_str(self.songs[self.counter])
 
@@ -132,7 +132,7 @@ class SongPlayer():
         # make first song readable if it's form youtube
         if self.songs_left and type(self.songs[self.counter]) is tuple:
             self.songs[0] = (await getVidFromLink(self.songs[0][0]),self.songs[0][1])
-        
+
         # only play music if user is in a voice channel
         if self.voice_channel:
 
@@ -155,7 +155,7 @@ class SongPlayer():
 
                 if not self.loop:
                     self.counter += 1
-            
+
             if self.loopqueue:
                 self.counter = 0
                 await self.play()
