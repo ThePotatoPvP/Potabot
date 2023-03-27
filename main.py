@@ -60,7 +60,7 @@ class Potabot(commands.Bot):
         print("Potabot is online !")
 
     async def on_message(self, message):
-        for name, func in inspect.getmembers(src.Events.ReactionEvents, inspect.isfunction):
+        for name, func in inspect.getmembers(src.Events.ReactionEvents, inspect.iscoroutinefunction):
             await func(client, message)
         await client.process_commands(message)
 

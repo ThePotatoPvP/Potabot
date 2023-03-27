@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 import re, asyncio
-
+from src.Events.decorators import TriggeredEvent
 
 async def wednesday_event(client : discord.Client, message : discord.Message):
     if message.author!=client.user and message.created_at.weekday() != 2 and re.match(r'.*(mercredi|wednesday).*', message.content.lower()):
@@ -16,3 +16,7 @@ async def latex_event(client : discord.Client, message : discord.Message):
         shame = await message.channel.send(epic_latex)
         await asyncio.sleep(1200)
         await shame.delete()
+
+@TriggeredEvent(keyword='foo')
+async def foo(client: discord.Client, message: discord.Message):
+    await message.channel.send('foo')
