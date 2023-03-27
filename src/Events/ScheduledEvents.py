@@ -6,8 +6,10 @@ from discord.ext import tasks, commands
 import datetime
 import asyncio
 
+
 from src.Events.decorators import ScheduledEvent
 
+import src.Utils.reddit
 '''
 
 This file should only countain ScheduledEvents functions formatted as the following :
@@ -28,7 +30,9 @@ async def wednesday(client: discord.Client):
     channel = client.get_channel(717298046144217099)
     await channel.send("https://i.kym-cdn.com/photos/images/newsfeed/001/091/264/665.jpg")
 
-@ScheduledEvent(hour=19, minute=00)
-async def foo(client: discord.Client):
-    channel = client.get_channel(822927544948359228)
-    await channel.send('foo')
+@ScheduledEvent(hour=20, minute=00)
+async def watinews(client: discord.Client):
+    imgz = src.Utils.reddit.grab_img('rienabranler')
+    channel = client.get_channel(734814108159049737)
+    await channel.send(f":rotating_light: Flash Info :rotating_light:\n Wati-Bonsoir à tous, voici l'actualité qui a marqué cette journée")
+    await channel.send(imgz[0])
