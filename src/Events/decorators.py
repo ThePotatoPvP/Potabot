@@ -46,7 +46,7 @@ def TriggeredEvent(keyword: str = None,
     """
     def decorator(func):
         async def wrapper(client, message):
-            if guild_id is not None: guild_ids.append(int(user_id))
+            if guild_id is not None: guild_ids.append(int(guild_id))
             if user_id is not None: user_ids.append(int(user_id))
             if ((not message.guild or guild_ids == [] or message.guild.id in guild_ids) and
                 (user_ids == [] or message.author.id in user_ids) and
