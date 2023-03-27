@@ -89,7 +89,7 @@ class Potabot(commands.Bot):
 async def scheduled_events_loop(client: discord.Client):
     # Call the wrapped function of each ScheduledEvent decorator at the scheduled time
     while True:
-        for name, func in inspect.getmembers(src.Events.ScheduledEvents, inspect.iscoroutinefunction):       
+        for name, func in inspect.getmembers(src.Events.ScheduledEvents, inspect.iscoroutinefunction):
             await func(client)
 
 if __name__ == '__main__':
