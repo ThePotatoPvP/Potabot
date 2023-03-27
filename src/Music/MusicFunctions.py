@@ -7,7 +7,7 @@ from discord.ext import commands
 from tinytag import TinyTag
 
 import yt_dlp as youtube_dl
-import os, re 
+import os, re
 import asyncio
 import random
 import json
@@ -195,7 +195,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['s','sk','ski'],
     brief='Skips the current song', display_name="skip")
-    async def skip(self, ctx): 
+    async def skip(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].skip()
@@ -205,7 +205,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['pr','prev'],
     brief='Plays the previous song', display_name="previous")
-    async def previous(self, ctx): 
+    async def previous(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 self.musicPlayers[ctx.guild].previous()
@@ -215,7 +215,7 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=['d','dco','disconnect', 'stop'],
     brief='Disconnects the bot from voice channel', display_name="deco")
-    async def deco(self, ctx): 
+    async def deco(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
                 await self.musicPlayers[ctx.guild].deco()
