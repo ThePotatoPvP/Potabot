@@ -64,7 +64,7 @@ def TriggeredEvent(keyword: str = None,
                                     await func(client, message)
                             else:
                                 if (keyword is None or (type(keyword) is str and
-                                re.match(f'.*{keyword.lower()}.*', message.content.lower()))):
+                                re.match(f'(|.*\s){keyword.lower()}(\s.*|)', message.content.lower()))):
                                     await func(client, message)
         return wrapper
     return decorator

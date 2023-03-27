@@ -23,3 +23,7 @@ async def latex_event(client : discord.Client, message : discord.Message):
     await asyncio.sleep(1200)
     await shame.delete()
 
+@TriggeredEvent(keyword="quoi")
+async def coiffeur(client : discord.Client, message : discord.Message):
+    print('ya match\n')
+    await message.reply(message.content.split('quoi')[0]+'feur')
