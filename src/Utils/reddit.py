@@ -1,12 +1,12 @@
 import urllib.request
-import re 
+import re
 
 def grab_img(sub: str) -> list[str]:
     """
     sub : str = name of a subreddit
 
     Returns a list containing images from top posts of the subreddit
-    at the time it's called, sorted by popular. 
+    at the time it's called, sorted by popular.
 
     Must not be used too much to avoid HTTPError 429
     """
