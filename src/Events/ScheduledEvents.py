@@ -34,7 +34,7 @@ async def wednesday(client: discord.Client):
 async def watinewsmidi(client: discord.Client):
     print('omjej c l event ')
     imgz = src.Utils.reddit.grab_img('rienabranler')
-    channel = client.get_channel(822927544948359228)
+    channel = client.get_channel(734814108159049737)
     await channel.send(f":rotating_light: Flash Info :rotating_light:\n Wati-Bonjourr à tous, voici le titre le ce matin.")
     await channel.send(imgz[0])
 
@@ -42,7 +42,7 @@ async def watinewsmidi(client: discord.Client):
 async def watinewssoir(client: discord.Client):
     print('omjej c l event ')
     imgz = src.Utils.reddit.grab_img('rienabranler')
-    channel = client.get_channel(822927544948359228)
+    channel = client.get_channel(734814108159049737)
     await channel.send(f":rotating_light: Flash Info :rotating_light:\n Wati-Bonsoir à tous, voici l'actualité qui a marqué cette journée.")
     await channel.send(imgz[0])
     await channel.send(imgz[2])
