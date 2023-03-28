@@ -87,10 +87,17 @@ class Potabot(commands.Bot):
             print(f'Error occured on {ctx.message.content} : \n {error}')
 
 async def scheduled_events_loop(client: discord.Client):
-    # Call the wrapped function of each ScheduledEvent decorator at the scheduled time
     while True:
-        for name, func in inspect.getmembers(src.Events.ScheduledEvents, inspect.iscoroutinefunction):
-            await func(client)
+        events = [func for name, func in inspect.getmembers(src.Events.ScheduledEvents, 
+                                                                predicate=lambda x: inspect.iscoroutinefunction(x))]
+        tasks = [event(client) for event in events]
+        print("Démarrage de la boucle pour les événements")
+        await asyncio.gather(*tasks)
+        await asyncio.sleep(1)
+
+
+
+
 
 if __name__ == '__main__':
     client = Potabot()
