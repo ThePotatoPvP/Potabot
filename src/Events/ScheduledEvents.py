@@ -31,7 +31,7 @@ async def wednesday(client: discord.Client):
     await channel.send("https://i.kym-cdn.com/photos/images/newsfeed/001/091/264/665.jpg")
 
 @ScheduledEvent(hour=13, minute=00)
-async def watinews(client: discord.Client):
+async def watinewsmidi(client: discord.Client):
     print('omjej c l event ')
     imgz = src.Utils.reddit.grab_img('rienabranler')
     channel = client.get_channel(822927544948359228)
@@ -39,7 +39,7 @@ async def watinews(client: discord.Client):
     await channel.send(imgz[0])
 
 @ScheduledEvent(hour=20, minute=00)
-async def watinews(client: discord.Client):
+async def watinewssoir(client: discord.Client):
     print('omjej c l event ')
     imgz = src.Utils.reddit.grab_img('rienabranler')
     channel = client.get_channel(822927544948359228)
