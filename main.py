@@ -4,29 +4,24 @@
 #id = 694246129906483311
 #public key = 70c7073417dc12f36435054a09b02e269b85acb1f89ded5724a8f9a20122f0e1
 
-# Necessary imports
-
-import discord
-import concurrent.futures
-
-# Custom bots
-
-from src.Bots.Potabot import Potabot
-from src.Bots.EventBot import EventBot
-
 ###
 #   Booting bots
 ###
 
-def run_bot(token: str, bot: discord.Client):
-    bot.run(token)
+import subprocess
+import os, sys
+import multiprocessing
 
-if __name__ == '__main__':
-    token = open('.token', 'r').read()
+def run_bot(file):
+    subprocess.run([sys.executable, file])
 
-    ptb = Potabot()
-    evt = EventBot()
+if __name__ == "__main__":
+    files = [ "Eventbot.py"]
+    processes = []
+    for f in files:
+        p = multiprocessing.Process(target=run_bot, args=(f,))
+        p.start()
+        processes.append(p)
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        executor.submit(run_bot, token, ptb)
-        executor.submit(run_bot, token, evt)
+    for p in processes:
+        p.join()

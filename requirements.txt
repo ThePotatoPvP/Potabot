@@ -5,3 +5,6 @@ datetime
 tinytag
 yt-dlp
 pytz
+sys
+os
+subprocess
