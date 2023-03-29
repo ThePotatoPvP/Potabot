@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
-import discord
-from discord.ext import commands
-import os
-import asyncio
 
 #Potato#8999
 #id = 694246129906483311
 #public key = 70c7073417dc12f36435054a09b02e269b85acb1f89ded5724a8f9a20122f0e1
 
-current_folder = os.path.dirname(os.path.abspath(__file__)) + "/"
+# Necessary imports
 
-import pytz
-tz = pytz.timezone('Europe/Paris')
+import discord
+import concurrent.futures
 
+# Custom bots
 
 from src.Bots.Potabot import Potabot
 from src.Bots.EventBot import EventBot
@@ -20,8 +17,6 @@ from src.Bots.EventBot import EventBot
 ###
 #   Booting bots
 ###
-
-import concurrent.futures
 
 def run_bot(token: str, bot: discord.Client):
     bot.run(token)
