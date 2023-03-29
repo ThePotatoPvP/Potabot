@@ -47,3 +47,7 @@ class Potabot(commands.Bot):
             print(f'Failed on {ctx.message.content}')
         else:
             print(f'Error occured on {ctx.message.content} : \n {error}')
+
+token = open('.token', 'r').read()
+client = Potabot()
+client.run(token)
