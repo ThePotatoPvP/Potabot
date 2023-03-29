@@ -35,7 +35,7 @@ async def watinewsmidi(client: discord.Client):
     print('omjej c l event ')
     imgz = src.Utils.reddit.grab_img('rienabranler')
     channel = client.get_channel(734814108159049737)
-    await channel.send(f":rotating_light: Flash Info :rotating_light:\n Wati-Bonjourr à tous, voici le titre le ce matin.")
+    await channel.send(f":rotating_light: Flash Info :rotating_light:\n Wati-Bonjour à tous, voici le titre de ce matin.")
     await channel.send(imgz[0])
 
 @ScheduledEvent(hour=20, minute=00)
