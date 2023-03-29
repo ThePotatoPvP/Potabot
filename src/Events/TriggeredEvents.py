@@ -25,5 +25,4 @@ async def latex_event(client : discord.Client, message : discord.Message):
 
 @TriggeredEvent(keyword="quoi")
 async def coiffeur(client : discord.Client, message : discord.Message):
-    print('ya match\n')
     await message.reply(message.content.split('quoi')[0]+'feur')
