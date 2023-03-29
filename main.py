@@ -16,7 +16,7 @@ def run_bot(file):
     subprocess.run([sys.executable, file])
 
 if __name__ == "__main__":
-    files = [ "Eventbot.py"]
+    files = ["Potabot.py", "Eventbot.py"]
     processes = []
     for f in files:
         p = multiprocessing.Process(target=run_bot, args=(f,))
