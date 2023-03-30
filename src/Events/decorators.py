@@ -20,8 +20,7 @@ def ScheduledEvent(hour: int = 0, minute: int = 0, day_of_week: int = None, day_
                     scheduled_time += datetime.timedelta(days=(day_of_month - scheduled_time.day) % 30)
                 time_to_wait = (scheduled_time - now).total_seconds()
                 if time_to_wait < 0:
-                    scheduled_time += datetime.timedelta(days=1)
-                    time_to_wait = (scheduled_time - now).total_seconds()
+                    continue
                 await asyncio.sleep(time_to_wait)
                 await func(client)
         return wrapper
