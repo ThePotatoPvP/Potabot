@@ -22,10 +22,6 @@ class SFWInteractions(commands.Cog):
         self.client = client
         self.values = sfw_init()
 
-    @commands.hybrid_command(brief='Answers pong')
-    async def ping(self, ctx):
-        await ctx.send('pong')
-
     @commands.hybrid_command(name='8b',aliases=["8ball"],
     brief='To get true wisdom')
     async def eight_ball(self, ctx, *, wonder=None):
@@ -50,7 +46,7 @@ class SFWInteractions(commands.Cog):
         e = discord.Embed(title=title, description=desc, color = 0xffd1f3)
         await ctx.send(embed=e)
 
-    @commands.hybrid_command(aliases=['image'], 
+    @commands.hybrid_command(aliases=['image'],
     brief='Sends a pic of a potato')
     async def pic(self, ctx):
         e = discord.Embed(title="Here's a potato pic", color=0xffd1f3)
@@ -60,20 +56,6 @@ class SFWInteractions(commands.Cog):
     @commands.hybrid_command(aliases=['rdm'],brief='Sends an emote judged funny')
     async def emote(self, ctx):
         await ctx.send(random.choice(self.values.emotes))
-
-    @commands.hybrid_command(aliases=['say'],brief='Make the bot say something')
-    async def send(self, ctx, *, text='issou'):
-        await ctx.send(text)
-        try:
-            await ctx.message.delete()
-        except: pass
-
-    @commands.hybrid_command(brief='Make the bot say something, privately')
-    async def mp(self, ctx, target : discord.Member, *, text='pd'):
-        try:
-            await target.send(text)
-            await ctx.message.delete()
-        except: pass
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(SFWInteractions(bot))
