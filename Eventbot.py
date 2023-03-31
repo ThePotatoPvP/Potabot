@@ -39,7 +39,6 @@ async def scheduled_events_loop(client: discord.Client):
         events = [func for name, func in inspect.getmembers(src.Events.ScheduledEvents,
                                                                 predicate=lambda x: inspect.iscoroutinefunction(x))]
         tasks = [event(client) for event in events]
-        print("Démarrage de la boucle pour les événements")
         await asyncio.gather(*tasks)
         await asyncio.sleep(1)
 
