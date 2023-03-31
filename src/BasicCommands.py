@@ -2,6 +2,7 @@
 
 import discord
 from discord.ext import commands
+from discord import app_commands
 
 import os, re
 import requests
@@ -29,7 +30,7 @@ class Basics(commands.Cog):
             await ctx.message.delete()
         finally: pass
 
-    @commands.command(brief='Transform an image into a fun gif')
+    @commands.command(brief='Transforms an image into a fun gif')
     async def bubblify(self, ctx, link: str):
         if re.match(r'.*\.(png|jpeg|gif|jpg|webm)$', link):
             try:
@@ -38,15 +39,31 @@ class Basics(commands.Cog):
                     handler.write(img_data)
                 src.Utils.image.togif(link.split('/')[-1])
                 src.Utils.image.booblify(link.split('/')[-1])
-                try:
-                    await ctx.send(file=discord.File(link.split('/')[-1]), ephemeral=True)
-                finally:
-                    await ctx.send(file=discord.File(link.split('/')[-1]))
+                await ctx.send(file=discord.File(link.split('/')[-1]))
                 os.remove(link.split('/')[-1])
             except ValueError as e:
                 await ctx.send(str(e))
         else:
-            await ctx.send('Please only provide image url, if the link you send is a image url feel free to report the issue')
+            await ctx.send('Please only provide an image url, if the link you send is an image url feel free to report the issue')
+
+    @app_commands.command(name='bubble', description='Adds a text bubble to an image')
+    async def _bubblify(self, interaction: discord.Interaction, link: str):
+        if re.match(r'.*\.(png|jpeg|gif|jpg|webm)$', link):
+            await interaction.response.defer()
+            try:
+                img_data = requests.get(link).content
+                with open(link.split('/')[-1], 'wb') as handler:
+                    handler.write(img_data)
+                src.Utils.image.togif(link.split('/')[-1])
+                src.Utils.image.booblify(link.split('/')[-1])
+                await interaction.followup.send(file=discord.File(link.split('/')[-1]))
+                os.remove(link.split('/')[-1])
+            except ValueError as e:
+                await cinteraction.followup.send(str(e))
+        else:
+            await interaction.response.send_message(
+                content='Please only provide image url, if the link you send is a image url feel free to report the issue',
+                ephemeral=True)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Basics(bot))
