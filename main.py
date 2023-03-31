@@ -9,14 +9,21 @@
 ###
 
 import subprocess
-import os, sys
+import os, sys, re
 import multiprocessing
 
 def run_bot(file):
     subprocess.run([sys.executable, file])
 
+def cleaner():
+    fs = os.listdir()
+    for f in fs:
+        if re.match(r'\.(mp4|gif|png|jpg|webm|webp|jpeg|avi|mp3|m4a)$', f):
+            os.remove(f)
+
 if __name__ == "__main__":
-    files = ["Potabot.py", "Eventbot.py"]
+    cleaner()
+    files = ["Potabot.py"]#, "Eventbot.py"]
     processes = []
     for f in files:
         p = multiprocessing.Process(target=run_bot, args=(f,))
