@@ -126,6 +126,7 @@ class SongPlayer():
             self.songs[self.counter+1] = (await getVidFromLink(self.songs[self.counter+1][0]), self.songs[self.counter+1][1])
 
     async def play(self):
+        print('started play func')
         user=self.ctx.author
         self.voice_channel=user.voice.channel
 
@@ -135,18 +136,14 @@ class SongPlayer():
 
         # only play music if user is in a voice channel
         if self.voice_channel:
-
             self.player = await self.voice_channel.connect()
             self.melangix()
             while self.songs_left:
                 await self.prepare_next()
-
                 self.player.play(self.media)
-
                 #Changing status, only for the main server
                 if str(self.guild.id) == '386474283804917760' and type(self.songs[self.counter]) is str: 
                     await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(self.title))
-
                 while self.player.is_playing():
                     await asyncio.sleep(1)
 
