@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from PIL import Image, ImageSequence
+import urllib.request
+import re, os
 
 def trans(x: int, y: int, W:int, H:int) -> bool:
     """
@@ -38,3 +40,14 @@ def togif(path: str):
         else:
             im = im.convert('RGBA')
             im.save(path[:-4]+'.gif', format='GIF', save_all=True, duration=100, loop=0)
+    if not path.endswith('.gif'):
+        os.remove(path)
+
+def tenorScrapper(link: str):
+    """
+    Returns the image link from a tenor share link
+    """
+    regex = r'https\:\/\/media\.tenor\.com\/[a-z,A-Z,0-9-]+\/[a-z,A-Z,0-9,-]+\.gif+'
+    page = urllib.request.urlopen(link).read().decode()
+    imgs = re.finditer(regex, page)
+    return  [g.group(0) for g in imgs][0]

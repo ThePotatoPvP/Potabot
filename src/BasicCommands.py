@@ -48,16 +48,20 @@ class Basics(commands.Cog):
 
     @app_commands.command(name='bubble', description='Adds a text bubble to an image')
     async def _bubblify(self, interaction: discord.Interaction, link: str):
+        if re.match(r'^https\:\/\/tenor\.com\/view\/[a-z,A-Z,0-9-]+', link):
+            link = src.Utils.image.tenorScrapper(link)
         if re.match(r'.*\.(png|jpeg|gif|jpg|webm)$', link):
             await interaction.response.defer()
             try:
                 img_data = requests.get(link).content
-                with open(link.split('/')[-1], 'wb') as handler:
+                img_name = link.split('/')[-1]
+                with open(img_name, 'wb') as handler:
                     handler.write(img_data)
-                src.Utils.image.togif(link.split('/')[-1])
-                src.Utils.image.booblify(link.split('/')[-1])
-                await interaction.followup.send(file=discord.File(link.split('/')[-1]))
-                os.remove(link.split('/')[-1])
+                src.Utils.image.togif(img_name)
+                img_name = img_name[:-4]+'.gif'
+                src.Utils.image.booblify(img_name)
+                await interaction.followup.send(file=discord.File(img_name))
+                os.remove(img_name)
             except ValueError as e:
                 await cinteraction.followup.send(str(e))
         else:
