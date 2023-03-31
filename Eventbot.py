@@ -26,14 +26,13 @@ class Eventbot(commands.Bot):
         if message.author != self.user:
             for name, func in inspect.getmembers(src.Events.TriggeredEvents, inspect.iscoroutinefunction):
                 await func(self, message)
-                print(f'Event {name} had been triggered on message : {message.content}')
 
     async def setup_hook(self):
         await self.tree.sync()
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        pass
+        print('', endline=False)
 
 async def scheduled_events_loop(client: discord.Client):
     while True:
