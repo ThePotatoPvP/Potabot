@@ -17,7 +17,6 @@ async def getDelay(hour, minute, day_of_week, day_of_month):
     elif day_of_month is not None:
         s += relativedelta(day=day_of_month)
     t = (s - now).total_seconds()
-    print(t)
     return t
 
 
