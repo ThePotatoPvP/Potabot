@@ -6,22 +6,30 @@ import asyncio
 import datetime
 import discord
 import re, random
+from dateutil.relativedelta import relativedelta
+
+
+async def getDelay(hour, minute, day_of_week, day_of_month):
+    now = datetime.datetime.now()
+    s = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    if day_of_week is not None:
+        s += datetime.timedelta(days=(day_of_week - s.weekday()) % 7)
+    elif day_of_month is not None:
+        s += relativedelta(day=day_of_month)
+    t = (s - now).total_seconds()
+    print(t)
+    return t
+
 
 def ScheduledEvent(hour: int = 0, minute: int = 0, day_of_week: int = None, day_of_month: int = None):
     def decorator(func):
         @functools.wraps(func)
         async def wrapper(client: discord.Client):
             while True:
-                now = datetime.datetime.now(tz)
-                scheduled_time = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
-                if day_of_week is not None:
-                    scheduled_time += datetime.timedelta(days=(day_of_week - scheduled_time.weekday()) % 7)
-                elif day_of_month is not None:
-                    scheduled_time += datetime.timedelta(days=(day_of_month - scheduled_time.day) % 30)
-                time_to_wait = (scheduled_time - now).total_seconds()
-                if time_to_wait < 0:
+                time_to_wait = await getDelay(hour, minute, day_of_week, day_of_month)
+                if time_to_wait < 0 or time_to_wait > 60:
+                    await asyncio.sleep(60)
                     continue
-                await asyncio.sleep(time_to_wait)
                 await func(client)
         return wrapper
     return decorator
