@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 
 async def getDelay(hour, minute, day_of_week, day_of_month):
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(tz)
     s = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
     if day_of_week is not None:
         s += datetime.timedelta(days=(day_of_week - s.weekday()) % 7)
@@ -26,10 +26,9 @@ def ScheduledEvent(hour: int = 0, minute: int = 0, day_of_week: int = None, day_
         async def wrapper(client: discord.Client):
             while True:
                 time_to_wait = await getDelay(hour, minute, day_of_week, day_of_month)
-                if time_to_wait < 0 or time_to_wait > 60:
-                    await asyncio.sleep(60)
-                    continue
-                await func(client)
+                if time_to_wait > 0 and time_to_wait < 60:
+                    await func(client)
+                await asyncio.sleep(60)
         return wrapper
     return decorator
 
