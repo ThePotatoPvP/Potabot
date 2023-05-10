@@ -237,9 +237,13 @@ class MusicFunctions(commands.Cog):
     @commands.command(aliases=['pt','ptop'],
     brief='Adds a song as first position in the wait list')
     async def playtop(self, ctx, *, query=None):
+        print("processing playtop")
         if self.musicPlayers.get(ctx.guild, False):
+            print("bot do be existing")
             await self._play(ctx=ctx, query=query)
+            print("added to the queue")
             await self.musicPlayers[ctx.guild].playtop()
+            print("job done")
         else:
             await self._play(ctx=ctx, query=query)
 
