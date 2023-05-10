@@ -5,6 +5,7 @@ import discord
 from tinytag import TinyTag
 import asyncio
 import random
+import os
 
 async def getVidFromLink(url:str):
     song = await YTDLSource.from_url(url, loop=False, stream=True)
@@ -103,7 +104,7 @@ class SongPlayer():
             if self.loopqueue:
                 rest = self.songs[::self.counter] + self.songs[self.counter+1::]
                 random.shuffle(rest)
-                self.songs = rest[::self.counter] + self.songs[self.counter] + rest[self.counter::]
+                self.songs = rest[::self.counter] + [self.songs[self.counter]] + rest[self.counter::]
             else:
                 rest = self.songs[self.counter+1::]
                 random.shuffle(rest)
