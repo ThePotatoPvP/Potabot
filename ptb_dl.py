@@ -25,7 +25,7 @@ from discord.ext import commands
 import asyncio
 import ffmpeg
 import os
-import youtube_dl
+import yt_dlp as youtube_dl
 import datetime
 import time
 import nest_asyncio
