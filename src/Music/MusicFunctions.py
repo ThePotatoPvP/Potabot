@@ -235,7 +235,7 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['pt','ptop'],
-    brief='Adds a song as first position in the wait list', display_name="playtop")
+    brief='Adds a song as first position in the wait list')
     async def playtop(self, ctx, *, query=None):
         if self.musicPlayers.get(ctx.guild, False):
             await self._play(ctx=ctx, query=query)
@@ -244,7 +244,7 @@ class MusicFunctions(commands.Cog):
             await self._play(ctx=ctx, query=query)
 
     @commands.command(aliases=['ps','pskip'],
-    brief='Skips the current song to play the requested one', display_name="playskip")
+    brief='Skips the current song to play the requested one')
     async def playskip(self, ctx, *, query=None):
         if self.musicPlayers.get(ctx.guild, False):
             await self._playtop(ctx=ctx, query=query)
