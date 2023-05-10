@@ -51,7 +51,7 @@ def info_from_id(id: str):
         info = ydl.extract_info(url, download=False)
     return info
 
-def url_from_id(id:str)->str:
+def url_from_id(id: str)->str:
     return f'https://www.youtube.com/watch?v={id}'
 
 def show_progress(progress : float) -> str:
