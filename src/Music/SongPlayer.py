@@ -129,7 +129,7 @@ class SongPlayer():
         print('started play func')
         user=self.ctx.author
         self.voice_channel=user.voice.channel
-
+        
         # make first song readable if it's form youtube
         if self.songs_left and type(self.songs[self.counter]) is tuple:
             self.songs[0] = (await getVidFromLink(self.songs[0][0]),self.songs[0][1])

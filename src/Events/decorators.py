@@ -26,8 +26,9 @@ def ScheduledEvent(hour: int = 0, minute: int = 0, day_of_week: int = None, day_
         async def wrapper(client: discord.Client):
             while True:
                 time_to_wait = await getDelay(hour, minute, day_of_week, day_of_month)
-                if time_to_wait > 0 and time_to_wait < 60:
+                if time_to_wait < 0 and time_to_wait > -60:
                     await func(client)
+                    await asyncio.sleep(60)
                 await asyncio.sleep(60)
         return wrapper
     return decorator
