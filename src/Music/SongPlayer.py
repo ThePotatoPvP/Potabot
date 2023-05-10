@@ -156,10 +156,13 @@ class SongPlayer():
         # only play music if user is in a voice channel
         if self.voice_channel:
             self.player = await self.voice_channel.connect()
+            print("connected")
             self.melangix()
+            print("melanged")
             while self.songs_left:
+                print('go prep')
                 await self.prepare_next()
-                print(self.media)
+                print(self.media, flush=True)
                 await self.player.play(self.media)
                 #Changing status, only for the main server
                 if str(self.guild.id) == '386474283804917760' and type(self.songs[self.counter]) is str:
