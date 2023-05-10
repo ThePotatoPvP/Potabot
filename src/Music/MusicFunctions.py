@@ -69,25 +69,6 @@ def duration_detector(length):
 
     return f"{hours}h {mins}m {seconds}s"
 
-async def update_annonce(client):
-    musiks = os.listdir("Musica/Review")
-    monstr = ""
-    channel = client.get_channel(396377450550001674)
-    annonce = discord.Embed(title="Grande nouvelle RedPilled people", description="Votre playlist préférée a de nouveaux ajouts !", color=0xffd1f3)
-    for musik in musiks:
-        if len(monstr + "- "+musik[:-4] + "\n") > 1024:
-                annonce.add_field(name = "Nouvelles musiques", value = monstr, inline = False)
-                annonce.add_field(name = "Participez !", value = "N'hésitez pas à venir en voc, profiter des toutes dernières musiques, comme de celles qui rythment ce discord depuis sa création. Et n'oubliez pas que vous pouvez faire vos propositions en envoyant des liens youtube au bot en mp. En espérant vous ambiencer bientôt", inline = False)
-                await channel.send(embed = annonce)
-                annonce = discord.Embed(title="Grande nouvelle RedPilled people", description="Votre playlist préférée a de nouveaux ajouts !", color=0xffd1f3)
-                monstr = str()
-        monstr += "- "+musik[:-4] + "\n"
-        os.rename("Musica/Review/"+musik, "Musica/Main/"+musik)
-    annonce.add_field(name = "Nouvelles musiques", value = monstr, inline = False)
-    annonce.add_field(name = "Participez !", value = "N'hésitez pas à venir en voc, profiter des toutes dernières musiques, comme de celles qui rythment ce discord depuis sa création. Et n'oubliez pas que vous pouvez faire vos propositions en envoyant des liens youtube au bot en mp. En espérant vous ambiencer bientôt", inline = False)
-    await channel.send(embed = annonce)
-    await channel.send("<@&848629399422500904>")
-
 def gotoreview():
     r = os.listdir('./ressources/Musica/Update')
     for i in r:

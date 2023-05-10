@@ -14,6 +14,25 @@ def song_to_str(song) -> str:
     if type(song) is str: return song[:-4]
     return song[1]
 
+async def update_annonce(client):
+    musiks = os.listdir("Musica/Review")
+    monstr = ""
+    channel = client.get_channel(396377450550001674)
+    annonce = discord.Embed(title="Grande nouvelle RedPilled people", description="Votre playlist préférée a de nouveaux ajouts !", color=0xffd1f3)
+    for musik in musiks:
+        if len(monstr + "- "+musik[:-4] + "\n") > 1024:
+                annonce.add_field(name = "Nouvelles musiques", value = monstr, inline = False)
+                annonce.add_field(name = "Participez !", value = "N'hésitez pas à venir en voc, profiter des toutes dernières musiques, comme de celles qui rythment ce discord depuis sa création. Et n'oubliez pas que vous pouvez faire vos propositions en envoyant des liens youtube au bot en mp. En espérant vous ambiencer bientôt", inline = False)
+                await channel.send(embed = annonce)
+                annonce = discord.Embed(title="Grande nouvelle RedPilled people", description="Votre playlist préférée a de nouveaux ajouts !", color=0xffd1f3)
+                monstr = str()
+        monstr += "- "+musik[:-4] + "\n"
+        os.rename("Musica/Review/"+musik, "Musica/Main/"+musik)
+    annonce.add_field(name = "Nouvelles musiques", value = monstr, inline = False)
+    annonce.add_field(name = "Participez !", value = "N'hésitez pas à venir en voc, profiter des toutes dernières musiques, comme de celles qui rythment ce discord depuis sa création. Et n'oubliez pas que vous pouvez faire vos propositions en envoyant des liens youtube au bot en mp. En espérant vous ambiencer bientôt", inline = False)
+    await channel.send(embed = annonce)
+    await channel.send("<@&848629399422500904>")
+
 class SongPlayer():
     """Creates an instance of the bot to play music in a voice channel
 
@@ -45,7 +64,7 @@ class SongPlayer():
         try:
             aim_channel = self.voice_channel
             return len(aim_channel.members) < 2
-        except: return True 
+        except: return True
 
     def time_left(self) -> int:
         totalsec = int()
@@ -101,7 +120,7 @@ class SongPlayer():
             await self.ctx.voice_client.disconnect()
             if self.mode == 'review':
                 await update_annonce(self.bot)
-        except: 
+        except:
             pass
         await self.bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = 'p!help'))
         self.musicPlayers[self.guild] = None
@@ -129,7 +148,7 @@ class SongPlayer():
         print('started play func')
         user=self.ctx.author
         self.voice_channel=user.voice.channel
-        
+
         # make first song readable if it's form youtube
         if self.songs_left and type(self.songs[self.counter]) is tuple:
             self.songs[0] = (await getVidFromLink(self.songs[0][0]),self.songs[0][1])
@@ -142,7 +161,7 @@ class SongPlayer():
                 await self.prepare_next()
                 self.player.play(self.media)
                 #Changing status, only for the main server
-                if str(self.guild.id) == '386474283804917760' and type(self.songs[self.counter]) is str: 
+                if str(self.guild.id) == '386474283804917760' and type(self.songs[self.counter]) is str:
                     await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(self.title))
                 while self.player.is_playing():
                     await asyncio.sleep(1)
