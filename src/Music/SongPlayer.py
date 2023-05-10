@@ -51,6 +51,7 @@ class SongPlayer():
         self.mode = mode
         self.counter = 0
         self.musicPlayers = musicPlayers
+        self.songs = []
 
     @property
     def songs_left(self):return len(self.songs)-self.counter
@@ -124,8 +125,7 @@ class SongPlayer():
         except:
             pass
         await self.bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name = 'p!help'))
-        self.musicPlayers[self.guild] = None
-        self = None
+        del self.musicPlayers[self.guild]
 
     async def prepare_next(self):
         # Make first song clean if from youtube and not ready yet
@@ -146,7 +146,6 @@ class SongPlayer():
             self.songs[self.counter+1] = (await getVidFromLink(self.songs[self.counter+1][0]), self.songs[self.counter+1][1])
 
     async def play(self):
-        print('started play func')
         user=self.ctx.author
         self.voice_channel=user.voice.channel
 
@@ -160,7 +159,7 @@ class SongPlayer():
             self.melangix()
             while self.songs_left:
                 await self.prepare_next()
-                self.player.play(self.media)
+                await self.player.play(self.media)
                 #Changing status, only for the main server
                 if str(self.guild.id) == '386474283804917760' and type(self.songs[self.counter]) is str:
                     await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(self.title))
