@@ -159,6 +159,7 @@ class SongPlayer():
             self.melangix()
             while self.songs_left:
                 await self.prepare_next()
+                print(self.media)
                 await self.player.play(self.media)
                 #Changing status, only for the main server
                 if str(self.guild.id) == '386474283804917760' and type(self.songs[self.counter]) is str:
