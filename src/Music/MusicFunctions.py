@@ -246,16 +246,13 @@ class MusicFunctions(commands.Cog):
             await self.musicPlayers[ctx.guild].playtop()
             print("job done")
         else:
-            await self._play(ctx=ctx, query=query)
+            await self.play(ctx=ctx, query=query)
 
     @commands.command(aliases=['ps','pskip'],
     brief='Skips the current song to play the requested one')
     async def playskip(self, ctx, *, query=None):
-        if self.musicPlayers.get(ctx.guild, False):
-            await self.playtop(ctx=ctx, query=query)
-            await self.skip(ctx)
-        else:
-            await self.play(ctx=ctx, query=query)
+        await self.playtop(ctx=ctx, query=query)
+        await self.skip(ctx)
 
     @commands.command(aliases=['tocome'],
     brief='Shows the music waiting to join the playlist')
