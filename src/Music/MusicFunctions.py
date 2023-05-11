@@ -130,6 +130,7 @@ class MusicFunctions(commands.Cog):
                 songs = match
         else: songs = musicas
         if self.musicPlayers.get(ctx.guild,False):
+            print('already existing client')
             self.musicPlayers[ctx.guild].add_songs(songs)
         else:
             self.musicPlayers[ctx.guild] = SongPlayer(self.musicPlayers, ctx, ctx.guild, songs, self.client, 'casu')
@@ -240,7 +241,7 @@ class MusicFunctions(commands.Cog):
         print("processing playtop")
         if self.musicPlayers.get(ctx.guild, False):
             print("bot do be existing")
-            await self._play(ctx=ctx, query=query)
+            await self.play(ctx=ctx, query=query)
             print("added to the queue")
             await self.musicPlayers[ctx.guild].playtop()
             print("job done")
@@ -251,10 +252,10 @@ class MusicFunctions(commands.Cog):
     brief='Skips the current song to play the requested one')
     async def playskip(self, ctx, *, query=None):
         if self.musicPlayers.get(ctx.guild, False):
-            await self._playtop(ctx=ctx, query=query)
-            await self._skip(ctx)
+            await self.playtop(ctx=ctx, query=query)
+            await self.skip(ctx)
         else:
-            await self._play(ctx=ctx, query=query)
+            await self.play(ctx=ctx, query=query)
 
     @commands.command(aliases=['tocome'],
     brief='Shows the music waiting to join the playlist')
