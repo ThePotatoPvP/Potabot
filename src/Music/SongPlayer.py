@@ -9,7 +9,7 @@ import os
 
 async def getVidFromLink(url:str):
     song = await YTDLSource.from_url(url, loop=False, stream=True)
-    return song
+    return discord.PCMVolumeTransformer(song)
 
 def song_to_str(song) -> str:
     if type(song) is str: return song[:-4]
@@ -51,7 +51,6 @@ class SongPlayer():
         self.mode = mode
         self.counter = 0
         self.musicPlayers = musicPlayers
-        self.songs = []
 
     @property
     def songs_left(self):return len(self.songs)-self.counter
@@ -130,7 +129,7 @@ class SongPlayer():
     async def prepare_next(self):
         # Make first song clean if from youtube and not ready yet
         if type(self.songs[self.counter]) is tuple and type(self.songs[self.counter][0]) is str:
-            self.songs[self.counter] = (await getVidFromLink(self.songs[self.counter][0]),self.songs[self.counter][1])
+            self.songs[self.counter] = (await YTDLSource.from_url(self.songs[self.counter][0], stream=True),self.songs[self.counter][1])
 
         # Make song readable
         if type(self.songs[self.counter]) is str:
@@ -148,7 +147,6 @@ class SongPlayer():
     async def play(self):
         user=self.ctx.author
         self.voice_channel=user.voice.channel
-
         # make first song readable if it's form youtube
         if self.songs_left and type(self.songs[self.counter]) is tuple:
             self.songs[0] = (await getVidFromLink(self.songs[0][0]),self.songs[0][1])
@@ -156,19 +154,15 @@ class SongPlayer():
         # only play music if user is in a voice channel
         if self.voice_channel:
             self.player = await self.voice_channel.connect()
-            print("connected")
             self.melangix()
-            print("melanged")
             while self.songs_left:
-                print('go prep')
                 await self.prepare_next()
-                print(self.media, flush=True)
-                await self.player.play(self.media)
+                self.player.play(self.media, after=lambda e: print(f'Player error: {e}') if e else None)
                 #Changing status, only for the main server
                 if str(self.guild.id) == '386474283804917760' and type(self.songs[self.counter]) is str:
                     await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(self.title))
                 while self.player.is_playing():
-                    await asyncio.sleep(1)
+                    await asyncio.sleep(10)
 
                 if self.is_alone():
                     await self.deco()
