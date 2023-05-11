@@ -114,7 +114,7 @@ class MusicFunctions(commands.Cog):
         await ctx.message.delete()
 
     @commands.command(aliases=["p","pl","ambiance"],
-    brief='Makes the bot play audio', display_name="play")
+    brief='Makes the bot play audio')
     async def play(self, ctx, *, query=None):
         if query:
             match = matching_songs(query)
@@ -137,7 +137,7 @@ class MusicFunctions(commands.Cog):
             await self.musicPlayers[ctx.guild].play()
 
     @commands.hybrid_command(aliases=["q","print"],
-    brief='Shows the next songs to be played', display_name="queue")
+    brief='Shows the next songs to be played')
     async def queue(self, ctx, *, bullshit=None):
         if self.musicPlayers.get(ctx.guild,False):
             self.message = await ctx.send(embed=make_embed(self.musicPlayers[ctx.guild]))
@@ -154,7 +154,7 @@ class MusicFunctions(commands.Cog):
             embed = discord.Embed(title='Matching songs :',description=daMess,color=0xffd1f3)
             await ctx.send(embed=embed)
 
-    @commands.command(aliases=['calc'],brief='Does the maths for the length of the playlist', display_name="calc")
+    @commands.command(aliases=['calc'],brief='Does the maths for the length of the playlist')
     async def calculus(self, ctx, tab=musicas):
         totalsec = 0
         old_percent = 0
@@ -176,7 +176,7 @@ class MusicFunctions(commands.Cog):
             await ctx.send("Jo suis cassé")
 
     @commands.command(aliases=['s','sk','ski'],
-    brief='Skips the current song', display_name="skip")
+    brief='Skips the current song')
     async def skip(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
@@ -186,7 +186,7 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['pr','prev'],
-    brief='Plays the previous song', display_name="previous")
+    brief='Plays the previous song')
     async def previous(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
@@ -196,7 +196,7 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['d','dco','disconnect', 'stop'],
-    brief='Disconnects the bot from voice channel', display_name="deco")
+    brief='Disconnects the bot from voice channel')
     async def deco(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
@@ -206,7 +206,7 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['l','lop', 'boucle'],
-    brief='Puts the current song on loop', display_name="loop")
+    brief='Puts the current song on loop')
     async def loop(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
@@ -216,7 +216,7 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['lq'],
-    brief='Puts the current playlist on loop', display_name="loopqueue")
+    brief='Puts the current playlist on loop')
     async def loopqueue(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
@@ -226,7 +226,7 @@ class MusicFunctions(commands.Cog):
             await ctx.send(e.message)
 
     @commands.command(aliases=['random', 'melange'],
-    brief='Shuffles the list of songs to come', display_name="shuffle")
+    brief='Shuffles the list of songs to come')
     async def shuffle(self, ctx):
         try:
             if self.musicPlayers.get(ctx.guild,False):
