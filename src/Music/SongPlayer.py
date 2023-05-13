@@ -162,7 +162,7 @@ class SongPlayer():
                 if str(self.guild.id) == '386474283804917760' and type(self.songs[self.counter]) is str:
                     await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(self.title))
                 while self.player.is_playing():
-                    await asyncio.sleep(10)
+                    await asyncio.sleep(1)
 
                 if self.is_alone():
                     await self.deco()
