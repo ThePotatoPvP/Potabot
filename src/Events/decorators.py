@@ -34,7 +34,7 @@ def ScheduledEvent(hour: int = 0, minute: int = 0, day_of_week: int = None, day_
     return decorator
 
 
-def TriggeredEvent(keyword: str = None,
+def TriggeredEvent(rgx: str = None,
                 guild_id: int = None,
                 guild_ids: list[int] = None,
                 channel_id: int = None,
@@ -46,7 +46,7 @@ def TriggeredEvent(keyword: str = None,
     """Will run a function when a message matches criterias.
 
     Args:
-        keyword (str, optional): RegEx to be matched by message.content. Defaults to None.
+        rgx (str, optional): RegEx to be matched by message.content. Defaults to None.
         guild_id (int, optional): id of the server that can trigger the event. Defaults to all.
         guild_ids (list[int], optional): list of guild_id. Defaults to [].
         channel_id (int, optional): id of the channel that can trigger the event. Defaults to all.
@@ -58,7 +58,6 @@ def TriggeredEvent(keyword: str = None,
     """
     def decorator(func):
         async def wrapper(client, message):
-
             if guild_id is not None: guild_ids.append(int(guild_id))
             if user_id is not None: user_ids.append(int(user_id))
             if channel_id is not None: channel_ids.append(int(channel_id))
@@ -69,12 +68,12 @@ def TriggeredEvent(keyword: str = None,
                     if user_ids == [] or message.author.id in user_ids:
                         if channel_ids == [] or message.channel.id in channel_ids:
                             if case_sensitive:
-                                if (keyword is None or (type(keyword) is str and
-                                re.match(f'(|.*\s){keyword}(\s.*|)', message.content))):
+                                if (rgx is None or (type(rgx) is str and
+                                re.match(f'{rgx}', message.content))):
                                     await func(client, message)
                             else:
-                                if (keyword is None or (type(keyword) is str and
-                                re.match(f'(|.*\s){keyword.lower()}(\s.*|)', message.content.lower()))):
+                                if (rgx is None or (type(rgx) is str and
+                                re.match(f'{rgx.lower()}', message.content.lower()))):
                                     await func(client, message)
         return wrapper
 
