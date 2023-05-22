@@ -6,6 +6,7 @@ import asyncio
 import datetime
 import discord
 import re, random
+import time
 from dateutil.relativedelta import relativedelta
 
 
@@ -28,7 +29,7 @@ def ScheduledEvent(hour: int = 0, minute: int = 0, day_of_week: int = None, day_
                 time_to_wait = await getDelay(hour, minute, day_of_week, day_of_month)
                 if time_to_wait < 0 and time_to_wait > -60:
                     await func(client)
-                    await asyncio.sleep(60)
+                    time.sleep(60)
                 await asyncio.sleep(60)
         return wrapper
     return decorator
