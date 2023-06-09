@@ -63,7 +63,7 @@ class Basics(commands.Cog):
                 await interaction.followup.send(file=discord.File(img_name))
                 os.remove(img_name)
             except ValueError as e:
-                await cinteraction.followup.send(str(e))
+                await interaction.followup.send(str(e))
         else:
             await interaction.response.send_message(
                 content='Please only provide image url, if the link you send is a image url feel free to report the issue',
