@@ -15,7 +15,8 @@ class Potabot(commands.Bot):
             "src.AdminCommands",
             "src.SFWInteractions",
             "src.Music.MusicFunctions",
-            "src.BasicCommands"
+            "src.BasicCommands",
+            "src.ClosedAI"
         ]
 
     async def on_ready(self):
