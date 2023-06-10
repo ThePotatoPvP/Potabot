@@ -2,11 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-import asyncio
-
 from src.Utils.ScrapAI.text import generate_response
-
-
 
 class ClosedAI(commands.Cog):
     def __init__(self, client):
