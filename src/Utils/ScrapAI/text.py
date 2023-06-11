@@ -34,6 +34,12 @@ async def generate_response(prompt):
         return one_word_answer
     return split_response(response["text"])
 
+async def generate_response_thread(thread):
+    message = thread[len(thread)-1]
+    context = thread[:-1]
+    prompt = "Context:{},You have to respond to {}".format(context, message)
+    response = await generate_response(prompt)
+    return(response)
 
 ##
 #       Summarising
