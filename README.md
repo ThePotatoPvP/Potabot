@@ -4,11 +4,19 @@ PotaBot is a general purpose Discord bot made specifically for a private server.
 
 ## Commands
 
-- `p!help`: Displays a helpful help page with all available commands.
-- `p!play <song>`: Plays audio from a link.
-- `p!skip`: Skips the currently playing song.
-- `p!queue`: Displays the current song queue.
-- `p!stop`: Stops playing music and clears the queue.
+- General
+    - `/ping` : Sends Pong.
+    - `/8b` : Helps you make tough decisions.
+    - `/roast` : Roasts someone for you.
+    - `/luv` : Sends a pickup line aimed to your loved one.
+- Music
+    - `p!play <song>` : Plays audio from a link.
+    - `p!skip` : Skips the currently playing song.
+    - `p!queue` : Displays the current song queue.
+    - `p!stop` : Stops playing music and clears the queue.
+- Miscellianous
+    - `/bubble` : Adds a speech bubble on top of an image and turns it into a GIF.
+    - `/yt-summarise` : Gives a brief summary  of a youtube video
 
 ## Contributing
 
@@ -35,21 +43,6 @@ async def foo(client: discord.Client):
 ```
 
 To allow for simple usage, all of those events shall be typed the same as this example and be in [`ScheduledEvents`](src/Events/ScheduledEvents.py)
-
-## Advanced
-
-PotaBot has a unique playlist feature that allows anyone to suggest a song by sending a link or audio file to the bot in a DM. The bot will then download the audio file and store it in the `Musica/` directory. However, moderators of the server have to review the proposed songs before they can be added to the playlist.
-
-To review the proposed songs, use the following commands:
-
-- `p!review`: Plays the next unreviewed songs. Moderators can use this command to listen to the proposed songs and decide if they should be added to the playlist or not.
-- `p!remove`: Removes the current song being reviewed from the `directory. Moderators can use this command to reject a proposed song.
-- `p!rename <name>`: Renames the current song being reviewed to the specified name. Moderators can use this command to make it easier to find the proposed song later.
-
-To listen to the playlist, use the `p!play <song>` command with or without a query. If no argument is provided, the bot will play the default playlist by default.
-
-Note that the playlist feature requires disk space to store the downloaded audio files. Make sure you have enough space before using this feature. Also, since this directly uses the architecture of your file system, you may face issues that I didn't plan, please contact me if you need help with setting that up. 
-Also you might want to change the `update_annonce` function in `src/Music/MusicFunctions` to fit your server.
 
 ## License
 
