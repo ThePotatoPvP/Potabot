@@ -115,7 +115,17 @@ class ClosedAI(commands.Cog):
             embed.add_field(name="Negative", value=f"{negative}", inline=False)
 
         await interaction.followup.send(content=f"Generated image for{interaction.user.mention}", file=file, embed=embed)
-
+    
+    
+    @app_commands.command(name="create_thread",description="Creates a new chat with memory")
+    async def create_thread(self, interaction: discord.Interaction, title: str):
+        await interaction.response.defer()
+        userid = interaction.user.mention
+        channel = interaction.channel
+        thread = await channel.create_thread(name=title, invitable=True)
+        await thread.send(userid)
+    
+    
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if isinstance(message.channel, discord.Thread) and message.author.id != self.client.user.id :
