@@ -6,7 +6,7 @@ from src.Utils.ScrapAI.text import generate_response, transcript, generate_respo
 from src.Utils.ScrapAI.image import detectnsfw, generate_image
 
 class ClosedAI(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: discord.Client):
         self.client = client
 
     @app_commands.command(name="askgpt4", description="Ask GPT4 for a response")
@@ -118,15 +118,18 @@ class ClosedAI(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if isinstance(message.channel, discord.Thread):
-            history = [msg.content for msg in await message.channel.history(limit=200).flatten()]
-            response = await generate_response_thread(history)
-            await message.channel.send(response[0])
+        if isinstance(message.channel, discord.Thread) and message.author.id != self.client.user.id :
+            async with message.channel.typing():
+                history = [msg.content async for msg in message.channel.history(limit=200)]
+                print(type(history), history)
+                response = await generate_response_thread(history)
+                await message.channel.send(response[0])
 
-            for k in range(1, len(response)):
-                message.channel.send(response[k])
+                for k in range(1, len(response)):
+                    message.channel.send(response[k])
+
         else:
-            await self.client.process_commands()
+            await self.client.process_commands(message)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ClosedAI(bot))
