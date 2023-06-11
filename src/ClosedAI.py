@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord import app_commands
 
 from src.Utils.ScrapAI.text import generate_response, transcript, generate_response_thread
-from src.Utils.ScrapAI.image import detectnsfw, generate_image
+from src.Utils.ScrapAI.image import generate_image
 
 class ClosedAI(commands.Cog):
     def __init__(self, client: discord.Client):
@@ -91,12 +91,6 @@ class ClosedAI(commands.Cog):
         if negative is not None:
             prompt_to_detect = f"{prompt} Negtive Prompt : {negative}"
 
-        is_nsfw = await detectnsfw(prompt_to_detect)
-
-        if is_nsfw:
-            await interaction.followup.send("⚠️ Your prompt potentially contains sensitive or inappropriate content. Please revise your prompt.")
-            return
-
         imagefileobj = await generate_image(prompt, style.value, ratio.value, negative, upscale_status)
 
         file = discord.File(imagefileobj, filename=f"image.png")
@@ -117,28 +111,27 @@ class ClosedAI(commands.Cog):
             embed.add_field(name="Negative", value=f"{negative}", inline=False)
 
         await interaction.followup.send(content=f"Generated image for{interaction.user.mention}", file=file, embed=embed)
-    
-    
+
+
     @app_commands.command(name="create_thread",description="Creates a new chat with memory")
     @app_commands.choices(mode=[
         app_commands.Choice(name="Sortie de Prison de l'avatar fictif", value='JAILBREAK'),
         app_commands.Choice(name="Assistant de dévloppement informatique",value='DEV')
     ])
-    
+
     async def create_thread(self, interaction: discord.Interaction, title: str, mode: str):
         await interaction.response.defer()
-        channel = interaction.channel
-        if isinstance(channel,discord.Thread):
-            await interaction.followup.send('this command does not work in a thread',ephemeral=True)
+
+        if isinstance(interaction.channel,discord.Thread):
+            await interaction.followup.send('this command does not work in a thread', ephemeral=True)
             return
+
         with open('src/Utils/ScrapAI/preprompts.json', "r") as f:
             data = json.load(f)
-        preprompt = data[mode]
-        userid = interaction.user.mention
-        thread = await channel.create_thread(name=title, invitable=True)
-        await thread.send(preprompt+str(userid))
+        thread = await interaction.channel.create_thread(name=title.replace(" ", "_"), invitable=True)
+        await thread.send(data[mode]+str(interaction.user.mention))
         await interaction.followup.send('Thread created',ephemeral=True)
-    
+
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if isinstance(message.channel, discord.Thread) and message.author.id != self.client.user.id :
