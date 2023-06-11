@@ -1,4 +1,6 @@
 import discord
+import json
+
 from discord.ext import commands
 from discord import app_commands
 
@@ -118,13 +120,24 @@ class ClosedAI(commands.Cog):
     
     
     @app_commands.command(name="create_thread",description="Creates a new chat with memory")
-    async def create_thread(self, interaction: discord.Interaction, title: str):
-        await interaction.response.defer()
-        userid = interaction.user.mention
-        channel = interaction.channel
-        thread = await channel.create_thread(name=title, invitable=True)
-        await thread.send(userid)
+    @app_commands.choices(mode=[
+        app_commands.Choice(name="Sortie de Prison de l'avatar fictif", value='JAILBREAK'),
+        app_commands.Choice(name="Assistant de dévloppement informatique",value='DEV')
+    ])
     
+    async def create_thread(self, interaction: discord.Interaction, title: str, mode: str):
+        await interaction.response.defer()
+        channel = interaction.channel
+        if isinstance(channel,discord.Thread):
+            await interaction.followup.send('this command does not work in a thread',ephemeral=True)
+            return
+        with open('src/Utils/ScrapAI/preprompts.json', "r") as f:
+            data = json.load(f)
+        preprompt = data[mode]
+        userid = interaction.user.mention
+        thread = await channel.create_thread(name=title, invitable=True)
+        await thread.send(preprompt+str(userid))
+        await interaction.followup.send('Thread created',ephemeral=True)
     
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
