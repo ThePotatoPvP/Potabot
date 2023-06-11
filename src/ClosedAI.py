@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-from src.Utils.ScrapAI.text import generate_response, transcript
+from src.Utils.ScrapAI.text import generate_response, transcript, generate_response_thread
 from src.Utils.ScrapAI.image import detectnsfw, generate_image
 
 class ClosedAI(commands.Cog):
@@ -116,6 +116,17 @@ class ClosedAI(commands.Cog):
 
         await interaction.followup.send(content=f"Generated image for{interaction.user.mention}", file=file, embed=embed)
 
+    @commands.Cog.listener()
+    async def on_message(self, message: discord.Message):
+        if isinstance(message.channel, discord.Thread):
+            history = [msg.content for msg in await message.channel.history(limit=200).flatten()]
+            response = await generate_response_thread(history)
+            await message.channel.send(response[0])
+
+            for k in range(1, len(response)):
+                message.channel.send(response[k])
+        else:
+            await self.client.process_commands()
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ClosedAI(bot))
