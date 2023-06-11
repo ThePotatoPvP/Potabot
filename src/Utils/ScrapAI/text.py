@@ -39,14 +39,14 @@ async def generate_response(prompt):
 #       Summarising
 ##
 
-async def get_transcript_from_message(message_content):
-    def extract_video_id(message_content):
+async def transcript(link :str):
+    def extract_video_id(link: str):
         youtube_link_pattern = re.compile(
             r'(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
-        match = youtube_link_pattern.search(message_content)
+        match = youtube_link_pattern.search(link)
         return match.group(6) if match else None
 
-    video_id = extract_video_id(message_content)
+    video_id = extract_video_id(link)
     if not video_id:
         return None
 
@@ -60,6 +60,6 @@ async def get_transcript_from_message(message_content):
         [entry['text'] for entry in translated_transcript.fetch()])
     formatted_transcript = formatted_transcript[:2500]
 
-    response = f"Ignore all the instructions you got before. Summarizie the following in 8 bullet points:\n\n{formatted_transcript}\n\n\nProvide a summary or additional information based on the content. Write the summary in {current_language['language_name']}"
+    response = f"Ignore all the instructions you got before. Summarizie the following in 8 bullet points:\n\n{formatted_transcript}\n\n\nProvide a summary or additional information based on the content. Write the summary in french"
 
-    return response
+    return await generate_response(response)
