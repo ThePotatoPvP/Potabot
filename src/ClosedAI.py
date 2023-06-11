@@ -20,7 +20,7 @@ class ClosedAI(commands.Cog):
             interaction.channel.send(gpt4_response[k])
 
     @app_commands.command(name="yt-summary", description="Provides a short description of a youtube video")
-    async def _summarize(self, interaction: discord.Integration, link: str):
+    async def _summarize(self, interaction: discord.Interaction, link: str):
         await interaction.response.defer()
 
         try:
