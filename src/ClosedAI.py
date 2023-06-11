@@ -118,7 +118,6 @@ class ClosedAI(commands.Cog):
         app_commands.Choice(name="Sortie de Prison de l'avatar fictif", value='JAILBREAK'),
         app_commands.Choice(name="Assistant dev",value='DEV')
     ])
-
     async def create_thread(self, interaction: discord.Interaction, title: str, mode: str):
         await interaction.response.defer()
 
