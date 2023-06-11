@@ -36,7 +36,7 @@ async def generate_response(prompt):
 
 async def generate_response_thread(thread):
     message = thread[0]
-    context = reversed(thread.pop(0))
+    context = thread.pop(0).reverse()
     prompt = "Ignore all previous messages, from now on youare going to act as a chat bot in a discord server. Here's some context: {} , Here's the message you have to answer to {}".format(context, message)
     response = await generate_response(prompt)
     return(response)
