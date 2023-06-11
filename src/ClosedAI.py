@@ -116,7 +116,7 @@ class ClosedAI(commands.Cog):
     @app_commands.command(name="create_thread",description="Creates a new chat with memory")
     @app_commands.choices(mode=[
         app_commands.Choice(name="Sortie de Prison de l'avatar fictif", value='JAILBREAK'),
-        app_commands.Choice(name="Assistant de dévloppement informatique",value='DEV')
+        app_commands.Choice(name="Assistant dev",value='DEV')
     ])
 
     async def create_thread(self, interaction: discord.Interaction, title: str, mode: str):
