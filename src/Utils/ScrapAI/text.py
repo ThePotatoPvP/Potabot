@@ -37,7 +37,6 @@ async def generate_response(prompt):
 async def generate_response_thread(thread):
     message = thread[0]
     context = reversed(thread[0:])
-    print(thread, context)
     b, pre = bool(), str()
     for k in context:
         if b:
