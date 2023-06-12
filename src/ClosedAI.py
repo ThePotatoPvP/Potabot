@@ -21,7 +21,7 @@ class ClosedAI(commands.Cog):
         except discord.app_commands.errors.CommandInvokeError:
             gpt4_response = await generate_response(prompt)
         finally:
-            await interaction.followup.send('An error occured, please try again')
+            await interaction.followup.send('An error occured, please try again with another prompt', ephemeral=True)
 
         await interaction.followup.send(gpt4_response[0])
 
