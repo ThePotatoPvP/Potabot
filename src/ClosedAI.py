@@ -16,12 +16,7 @@ class ClosedAI(commands.Cog):
     async def askgpt4(self, interaction: discord.Interaction, prompt: str):
         await interaction.response.defer()
 
-        try:
-            gpt4_response = await generate_response(prompt)
-        except discord.app_commands.errors.CommandInvokeError:
-            gpt4_response = await generate_response(prompt)
-        finally:
-            await interaction.followup.send('An error occured, please try again with another prompt', ephemeral=True)
+        gpt4_response = await generate_response(prompt)
 
         await interaction.followup.send(gpt4_response[0])
 

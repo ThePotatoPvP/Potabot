@@ -1,8 +1,7 @@
-from src.Utils.ScrapAI import aiassist
 from youtube_transcript_api import YouTubeTranscriptApi
 
 import re
-from itertools import cycle
+import aiohttp
 
 ##
 #       Generic GPT prompting
@@ -28,11 +27,35 @@ def split_response(response, max_length=1999):
     return chunks
 
 async def generate_response(prompt):
-    response = await aiassist.Completion.create(prompt=prompt)
-    if not response["text"]:
-        one_word_answer = await aiassist.Completion.createStatic(prompt=prompt)
-        return one_word_answer
-    return split_response(response["text"])
+    base_url = 'https://gpt4.gravityengine.cc/api/openai/'
+    error_base_url = 'https://askgpt.cn/api/openai/'
+    arguments = '/v1/engines/text-davinci-003/completions'
+    endpoint = base_url + arguments
+
+    headers = {
+        'Content-Type': 'application/json',
+    }
+
+    data = {
+        'prompt': prompt,
+        'max_tokens': 800,
+        'temperature': 0.8
+    }
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(endpoint, headers=headers, json=data) as response:
+                response_data = await response.json()
+                response = response_data['choices'][0]['text']
+    except aiohttp.ClientError as error:
+        print('Error making the request retrying with fallback model')
+        endpoint = error_base_url + arguments
+        async with aiohttp.ClientSession() as session:
+            async with session.post(endpoint, headers=headers, json=data) as response:
+                response_data = await response.json()
+                response = response_data['choices'][0]['text']
+
+    return split_response(response)
 
 async def generate_response_thread(thread):
     message = thread[0].content

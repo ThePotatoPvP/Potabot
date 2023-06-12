@@ -1,5 +1,3 @@
-from src.Utils.ScrapAI import aiassist
-
 from src.Utils.ScrapAI.imaginepy import AsyncImagine, Style, Ratio
 import io
 
