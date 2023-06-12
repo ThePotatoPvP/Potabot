@@ -119,6 +119,8 @@ class ClosedAI(commands.Cog):
     @app_commands.choices(mode=[
         app_commands.Choice(name="Sortie de Prison de l'avatar fictif", value='JAILBREAK'),
         app_commands.Choice(name="Assistant dev",value='DEV')
+        app_commands.Choice(name="Chatbot classique",value='CHAT')
+        app_commands.Choice(name="Réponses courtes",value='SHORT')
     ])
     async def create_thread(self, interaction: discord.Interaction, title: str, mode: str):
         await interaction.response.defer()
