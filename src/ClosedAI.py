@@ -135,7 +135,7 @@ class ClosedAI(commands.Cog):
     async def on_message(self, message: discord.Message):
         if isinstance(message.channel, discord.Thread) and message.author.id != self.client.user.id :
             async with message.channel.typing():
-                history = [msg.content async for msg in message.channel.history(limit=200)]
+                history = [msg async for msg in message.channel.history(limit=200)]
                 response = await generate_response_thread(history)
                 await message.channel.send(response[0])
 
