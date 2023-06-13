@@ -123,6 +123,10 @@ class SongPlayer():
         del self.musicPlayers[self.guild]
 
     async def prepare_next(self):
+        if self.songs_left and type(self.songs[self.counter]) is tuple:
+            self.songs[self.counter] = (await YTDLSource.from_url(self.songs[self.counter][0], loop=self.bot.loop, stream=True), self.songs[self.counter][1])
+            print(self.songs)
+
         # Make song readable
         if type(self.songs[self.counter]) is str:
             if self.mode == 'review': media = './ressources/Musica/Review/' + self.songs[self.counter]
@@ -139,10 +143,6 @@ class SongPlayer():
     async def play(self):
         user=self.ctx.author
         self.voice_channel=user.voice.channel
-        # make first song readable if it's form youtube
-        if self.songs_left and type(self.songs[self.counter]) is tuple:
-            self.songs[self.counter] = (await YTDLSource.from_url(self.songs[self.counter][0], loop=self.bot.loop, stream=True), self.songs[self.counter][1])
-            print(self.songs)
 
         # only play music if user is in a voice channel
         if self.voice_channel:
