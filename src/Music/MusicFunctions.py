@@ -131,7 +131,7 @@ class MusicFunctions(commands.Cog):
         else: songs = musicas
         if self.musicPlayers.get(ctx.guild,False):
             print(f'already existing client with {self.musicPlayers[ctx.guild].songs=}')
-            self.musicPlayers[ctx.guild].add_songs(songs)
+            #self.musicPlayers[ctx.guild].add_songs(songs)
         else:
             self.musicPlayers[ctx.guild] = SongPlayer(self.musicPlayers, ctx, ctx.guild, songs, self.client, 'casu')
             await self.musicPlayers[ctx.guild].play()
