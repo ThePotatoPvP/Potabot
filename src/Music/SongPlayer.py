@@ -129,7 +129,7 @@ class SongPlayer():
     async def prepare_next(self):
         # Make first song clean if from youtube and not ready yet
         if type(self.songs[self.counter]) is tuple and type(self.songs[self.counter][0]) is str:
-            self.songs[self.counter] = (await YTDLSource.from_url(self.songs[self.counter][0], stream=True),self.songs[self.counter][1])
+            self.songs[self.counter] = (getVidFromLink(self.songs[self.counter][0]),self.songs[self.counter][1])
 
         # Make song readable
         if type(self.songs[self.counter]) is str:
