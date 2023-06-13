@@ -149,7 +149,7 @@ class SongPlayer():
         self.voice_channel=user.voice.channel
         # make first song readable if it's form youtube
         if self.songs_left and type(self.songs[self.counter]) is tuple:
-            self.songs[0] = (await getVidFromLink(self.songs[0][0]),self.songs[0][1])
+            self.songs[0] = (await YTDLSource.from_url(self.songs[self.counter+1][0], loop=self.bot.loop, stream=True),self.songs[0][1])
 
         # only play music if user is in a voice channel
         if self.voice_channel:
