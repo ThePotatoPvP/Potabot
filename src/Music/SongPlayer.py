@@ -7,9 +7,9 @@ import asyncio
 import random
 import os
 
-async def getVidFromLink(url:str):
-    song = await YTDLSource.from_url(url, loop=False, stream=True)
-    return discord.PCMVolumeTransformer(song)
+def getVidFromLink(url:str):
+    #song = await YTDLSource.from_url(url, loop=False, stream=True)
+    return discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
 
 def song_to_str(song) -> str:
     if type(song) is str: return song[:-4]
@@ -142,18 +142,19 @@ class SongPlayer():
 
         # Prepare next song if from youtube
         if self.songs_left>=2 and type(self.songs[self.counter+1]) is tuple:
-            self.songs[self.counter+1] = (await getVidFromLink(self.songs[self.counter+1][0]), self.songs[self.counter+1][1])
+            self.songs[self.counter+1] = (getVidFromLink(self.songs[self.counter+1][0]), self.songs[self.counter+1][1])
 
     async def play(self):
         user=self.ctx.author
         self.voice_channel=user.voice.channel
         # make first song readable if it's form youtube
         if self.songs_left and type(self.songs[self.counter]) is tuple:
-            self.songs[0] = (await getVidFromLink(self.songs[0][0]),self.songs[0][1])
+            self.songs[0] = (getVidFromLink(self.songs[0][0]),self.songs[0][1])
 
         # only play music if user is in a voice channel
         if self.voice_channel:
-            self.player = await self.voice_channel.connect()
+            await self.voice_channel.connect()
+            self.player = self.voice_client
             self.melangix()
             while self.songs_left:
                 await self.prepare_next()
