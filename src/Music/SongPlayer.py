@@ -142,7 +142,7 @@ class SongPlayer():
 
         # Prepare next song if from youtube
         if self.songs_left>=2 and type(self.songs[self.counter+1]) is tuple:
-            self.songs[self.counter+1] = (await YTDLSource.from_url(self.songs[self.counter][0], loop=self.bot.loop, stream=True), self.songs[self.counter+1][1])
+            self.songs[self.counter+1] = (await YTDLSource.from_url(self.songs[self.counter+1][0], loop=self.bot.loop, stream=True), self.songs[self.counter+1][1])
 
     async def play(self):
         user=self.ctx.author
