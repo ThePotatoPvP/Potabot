@@ -7,8 +7,8 @@ import asyncio
 import random
 import os
 
-def getVidFromLink(url:str):
-    #song = await YTDLSource.from_url(url, loop=False, stream=True)
+async def getVidFromLink(url:str):
+    song = await YTDLSource.from_url(url, loop=False, stream=True)
     return discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
 
 def song_to_str(song) -> str:
@@ -129,7 +129,7 @@ class SongPlayer():
     async def prepare_next(self):
         # Make first song clean if from youtube and not ready yet
         if type(self.songs[self.counter]) is tuple and type(self.songs[self.counter][0]) is str:
-            self.songs[self.counter] = (getVidFromLink(self.songs[self.counter][0]),self.songs[self.counter][1])
+            self.songs[self.counter] = (await YTDLSource.from_url(self.songs[self.counter][0], loop=self.bot.loop, stream=True),self.songs[self.counter][1])
 
         # Make song readable
         if type(self.songs[self.counter]) is str:
@@ -142,19 +142,18 @@ class SongPlayer():
 
         # Prepare next song if from youtube
         if self.songs_left>=2 and type(self.songs[self.counter+1]) is tuple:
-            self.songs[self.counter+1] = (getVidFromLink(self.songs[self.counter+1][0]), self.songs[self.counter+1][1])
+            self.songs[self.counter+1] = (await YTDLSource.from_url(self.songs[self.counter][0], loop=self.bot.loop, stream=True), self.songs[self.counter+1][1])
 
     async def play(self):
         user=self.ctx.author
         self.voice_channel=user.voice.channel
         # make first song readable if it's form youtube
         if self.songs_left and type(self.songs[self.counter]) is tuple:
-            self.songs[0] = (getVidFromLink(self.songs[0][0]),self.songs[0][1])
+            self.songs[0] = (await getVidFromLink(self.songs[0][0]),self.songs[0][1])
 
         # only play music if user is in a voice channel
         if self.voice_channel:
-            await self.voice_channel.connect()
-            self.player = self.ctx.voice_client
+            self.player = await self.voice_channel.connect()
             self.melangix()
             while self.songs_left:
                 await self.prepare_next()
