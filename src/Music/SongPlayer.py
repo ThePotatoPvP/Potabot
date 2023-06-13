@@ -7,10 +7,6 @@ import asyncio
 import random
 import os
 
-async def getVidFromLink(url:str):
-    song = await YTDLSource.from_url(url, loop=False, stream=True)
-    return discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
-
 def song_to_str(song) -> str:
     if type(song) is str: return song[:-4]
     return song[1]
@@ -149,7 +145,8 @@ class SongPlayer():
         self.voice_channel=user.voice.channel
         # make first song readable if it's form youtube
         if self.songs_left and type(self.songs[self.counter]) is tuple:
-            self.songs[0] = (await YTDLSource.from_url(self.songs[self.counter][0], loop=self.bot.loop, stream=True),self.songs[0][1])
+            self.songs[0] = (await YTDLSource.from_url(self.songs[0][0], loop=self.bot.loop, stream=True), self.songs[0][1])
+            print(self.songs)
 
         # only play music if user is in a voice channel
         if self.voice_channel:
