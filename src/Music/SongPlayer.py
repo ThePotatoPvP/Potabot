@@ -154,7 +154,7 @@ class SongPlayer():
         # only play music if user is in a voice channel
         if self.voice_channel:
             await self.voice_channel.connect()
-            self.player = self.voice_client
+            self.player = self.ctx.voice_client
             self.melangix()
             while self.songs_left:
                 await self.prepare_next()
