@@ -12,6 +12,8 @@ import asyncio
 import random
 import json
 
+from .YTDLSource import YTDLSource
+
 
 ###
 #   Setting up constants
@@ -115,26 +117,12 @@ class MusicFunctions(commands.Cog):
 
     @commands.command(aliases=["p","pl","ambiance"],
     brief='Makes the bot play audio')
-    async def play(self, ctx, *, query=None):
-        if query:
-            match = matching_songs(query)
-            if match == []:
-                songs = list()
-                with youtube_dl.YoutubeDL(ydl_opts) as yold:
-                    result = yold.extract_info(query, download=False)
-                    try:
-                        songs = [(url_from_id(result['entries'][i]['id']),result['entries'][i]['title']) for i in range(len(result['entries']))]
-                    except:
-                        songs = [(query,result['title'])]
-            else:
-                songs = match
-        else: songs = musicas
-        if self.musicPlayers.get(ctx.guild,False):
-            print(f'already existing client with {self.musicPlayers[ctx.guild].songs=}')
-            #self.musicPlayers[ctx.guild].add_songs(songs)
-        else:
-            self.musicPlayers[ctx.guild] = SongPlayer(self.musicPlayers, ctx, ctx.guild, songs, self.client, 'casu')
-            await self.musicPlayers[ctx.guild].play()
+    async def play(self, ctx, *, url=None):
+        async with ctx.typing():
+            player = await YTDLSource.from_url(url, loop=self.client.loop, stream=True)
+            ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+
+        await ctx.send(f'Now playing: {player.title}')
 
     @commands.hybrid_command(aliases=["q","print"],
     brief='Shows the next songs to be played')
