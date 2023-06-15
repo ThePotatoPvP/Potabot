@@ -123,9 +123,9 @@ class SongPlayer():
         del self.musicPlayers[self.guild]
 
     async def prepare_next(self):
-        if self.songs_left and type(self.songs[self.counter]) is tuple:
-            self.songs[self.counter] = (await YTDLSource.from_url(self.songs[self.counter][0], loop=self.bot.loop, stream=True), self.songs[self.counter][1])
-            print(self.songs)
+        # Make first song clean if from youtube and not ready yet
+        if type(self.songs[self.counter]) is tuple and type(self.songs[self.counter][0]) is str:
+            self.songs[self.counter] = (await YTDLSource.from_url(self.songs[self.counter][0], loop=self.bot.loop, stream=True),self.songs[self.counter][1])
 
         # Make song readable
         if type(self.songs[self.counter]) is str:

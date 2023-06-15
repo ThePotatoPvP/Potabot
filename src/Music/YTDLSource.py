@@ -16,7 +16,8 @@ ytdl_format_options ={
 }
 
 ffmpeg_opts = {
-    'options': '-vn -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -http_persistent 0',
+    'before_options' : '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5 -http_persistent 0',
+    'options': '-vn',
 }
 
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
