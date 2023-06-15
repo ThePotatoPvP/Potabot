@@ -118,6 +118,8 @@ class MusicFunctions(commands.Cog):
     @commands.command(aliases=["p","pl","ambiance"],
     brief='Makes the bot play audio')
     async def play(self, ctx, *, url=None):
+        await ctx.author.voice.channel.connect()
+
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.client.loop, stream=True)
             ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
