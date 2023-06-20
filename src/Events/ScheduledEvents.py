@@ -31,7 +31,7 @@ async def wednesday(client: discord.Client):
     await channel.send("https://i.kym-cdn.com/photos/images/newsfeed/001/091/264/665.jpg")
 
 
-@ScheduledEvent(hour=20, minute=00)
+@ScheduledEvent(day_of_week=6, hour=20, minute=00)
 async def watinewssoir(client: discord.Client):
     print('omjej c l event ')
     imgz = src.Utils.reddit.grab_img('rienabranler')
