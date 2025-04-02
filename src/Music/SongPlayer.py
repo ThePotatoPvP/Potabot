@@ -12,7 +12,7 @@ def song_to_str(song) -> str:
     return song[1]
 
 async def update_annonce(client):
-    musiks = os.listdir("Musica/Review")
+    musiks = os.listdir("./ressources/Musica/Review")
     monstr = ""
     channel = client.get_channel(396377450550001674)
     annonce = discord.Embed(title="Grande nouvelle RedPilled people", description="Votre playlist préférée a de nouveaux ajouts !", color=0xffd1f3)
@@ -24,7 +24,7 @@ async def update_annonce(client):
                 annonce = discord.Embed(title="Grande nouvelle RedPilled people", description="Votre playlist préférée a de nouveaux ajouts !", color=0xffd1f3)
                 monstr = str()
         monstr += "- "+musik[:-4] + "\n"
-        os.rename("Musica/Review/"+musik, "Musica/Main/"+musik)
+        os.rename("./ressources/Musica/Review/"+musik, "./ressources/Musica/Main/"+musik)
     annonce.add_field(name = "Nouvelles musiques", value = monstr, inline = False)
     annonce.add_field(name = "Participez !", value = "N'hésitez pas à venir en voc, profiter des toutes dernières musiques, comme de celles qui rythment ce discord depuis sa création. Et n'oubliez pas que vous pouvez faire vos propositions en envoyant des liens youtube au bot en mp. En espérant vous ambiencer bientôt", inline = False)
     await channel.send(embed = annonce)
@@ -45,6 +45,7 @@ class SongPlayer():
         self.bot = client
         self.loop, self.loopqueue = False, False
         self.mode = mode
+        self.newName = False
         self.counter = 0
         self.musicPlayers = musicPlayers
 
@@ -160,8 +161,14 @@ class SongPlayer():
                 if self.is_alone():
                     await self.deco()
 
-                if not self.loop:
-                    self.counter += 1
+                if self.mode == "review" and self.new_Name:
+                    if self.new_Name == "__delete__":
+                        os.remove("./ressources/Musica/Review/" + self.songs[self.counter])
+                    else:
+                        os.rename("./ressources/Musica/Review/" + self.songs[self.counter], "./ressources/Musica/Review/" + self.new_Name+self.songs[self.counter][-4:])
+                    self.new_Name = False
+
+                if not self.loop: self.counter += 1
 
             if self.loopqueue:
                 self.counter = 0

@@ -74,7 +74,7 @@ def duration_detector(length):
 def gotoreview():
     r = os.listdir('./ressources/Musica/Update')
     for i in r:
-        os.rename(f'./ressources/Musica/Update/{r}',f'./ressources/Musica/Review/{r}')
+        os.rename(f'./ressources/Musica/Update/{i}',f'./ressources/Musica/Review/{i}')
 
 def make_embed(sg: SongPlayer) -> discord.Embed:
     tab = sg.songs
@@ -121,6 +121,7 @@ class MusicFunctions(commands.Cog):
         if query:
             match = matching_songs(query)
             if match == []:
+                print(f"{query=}")
                 songs = list()
                 with youtube_dl.YoutubeDL(ydl_opts) as yold:
                     result = yold.extract_info(query, download=False)
@@ -255,6 +256,22 @@ class MusicFunctions(commands.Cog):
     async def playskip(self, ctx, *, query=None):
         await self.playtop(ctx=ctx, query=query)
         await self.skip(ctx)
+
+    @commands.command()
+    async def review(self, ctx):
+        gotoreview()
+        self.musicPlayers[ctx.guild] = SongPlayer(self.musicPlayers, ctx, ctx.guild, os.listdir('./ressources/Musica/Review/'), self.client, "review")
+        await self.musicPlayers[ctx.guild].play()
+
+    @commands.command()
+    async def rename(self, ctx, *, name:str):
+        if self.musicPlayers[ctx.guild].mode == "review":
+            self.musicPlayers[ctx.guild].new_Name = name
+            
+    @commands.command(aliases=["del"])
+    async def delete(self, ctx):
+        if self.musicPlayers[ctx.guild].mode == "review":
+            self.musicPlayers[ctx.guild].new_Name = "__delete__"
 
     @commands.command(aliases=['tocome'],
     brief='Shows the music waiting to join the playlist')
